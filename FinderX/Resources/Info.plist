@@ -39,5 +39,56 @@
 	<string></string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Compress with FinderX</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>compressWithFinderXService</string>
+			<key>NSPortName</key>
+			<string>FinderX</string>
+			<key>NSRequiredContext</key>
+			<dict>
+				<key>NSApplicationIdentifier</key>
+				<string>com.apple.finder</string>
+			</dict>
+			<key>NSSendTypes</key>
+			<array>
+				<string>public.file-url</string>
+				<string>NSURLPboardType</string>
+				<string>NSFilenamesPboardType</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Copy FinderX Link</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>copyFinderXLinkService</string>
+			<key>NSPortName</key>
+			<string>FinderX</string>
+			<key>NSRequiredContext</key>
+			<dict>
+				<key>NSApplicationIdentifier</key>
+				<string>com.apple.finder</string>
+			</dict>
+			<key>NSSendFileTypes</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>NSSendTypes</key>
+			<array>
+				<string>public.file-url</string>
+				<string>NSURLPboardType</string>
+				<string>NSFilenamesPboardType</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

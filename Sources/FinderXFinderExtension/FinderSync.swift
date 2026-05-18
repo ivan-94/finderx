@@ -1,5 +1,6 @@
 import AppKit
 import Darwin
+import FinderXLinking
 import FinderSync
 import OSLog
 import UniformTypeIdentifiers
@@ -17,7 +18,9 @@ final class FinderSync: FIFinderSync {
     override func menu(for menuKind: FIMenuKind) -> NSMenu? {
         let selectedURLs = FIFinderSyncController.default().selectedItemURLs() ?? []
         let targetedURL = FIFinderSyncController.default().targetedURL()
-        let imageURLs = Self.selectedImageURLs()
+        let actionURLs = Self.selectedItemURLsForAction()
+        let imageURLs = actionURLs.filter(Self.isSupportedImage)
+        let linkURL = actionURLs.count == 1 && Self.isOrdinaryFile(actionURLs[0]) ? actionURLs[0] : nil
         logger.notice(
             "menu requested kind=\(menuKind.rawValue, privacy: .public) selected=\(selectedURLs.map(\.path).joined(separator: "|"), privacy: .public) targeted=\(targetedURL?.path ?? "nil", privacy: .public) imageCount=\(imageURLs.count, privacy: .public)"
         )
@@ -27,20 +30,31 @@ final class FinderSync: FIFinderSync {
             return nil
         }
 
-        guard !imageURLs.isEmpty else {
-            logger.notice("menu ignored: no supported images")
+        guard !imageURLs.isEmpty || linkURL != nil else {
+            logger.notice("menu ignored: no eligible FinderX action")
             return nil
         }
 
         let menu = NSMenu(title: "FinderX")
-        let item = NSMenuItem(
-            title: "Compress with FinderX",
-            action: #selector(compressSelectedImages),
-            keyEquivalent: ""
-        )
-        item.target = self
-        menu.addItem(item)
-        logger.notice("menu returned: Compress with FinderX")
+        if !imageURLs.isEmpty {
+            let item = NSMenuItem(
+                title: "Compress with FinderX",
+                action: #selector(compressSelectedImages),
+                keyEquivalent: ""
+            )
+            item.target = self
+            menu.addItem(item)
+        }
+        if linkURL != nil {
+            let item = NSMenuItem(
+                title: "Copy FinderX Link",
+                action: #selector(copyFinderXLink),
+                keyEquivalent: ""
+            )
+            item.target = self
+            menu.addItem(item)
+        }
+        logger.notice("menu returned itemCount=\(menu.items.count, privacy: .public)")
         return menu
     }
 
@@ -49,22 +63,40 @@ final class FinderSync: FIFinderSync {
         logger.notice("compress action selected image count=\(urls.count, privacy: .public)")
         guard !urls.isEmpty else { return }
 
-        var components = URLComponents()
-        components.scheme = "finderx"
-        components.host = "compress"
-        components.queryItems = urls.map { URLQueryItem(name: "file", value: $0.path) }
-
-        guard let url = components.url else { return }
+        guard let url = FinderXLink.makeCompressURL(for: urls) else { return }
         NSWorkspace.shared.open(url)
     }
 
+    @objc private func copyFinderXLink() {
+        let urls = Self.selectedItemURLsForAction()
+        guard urls.count == 1, Self.isOrdinaryFile(urls[0]) else {
+            logger.notice("copy link ignored: selection is not one ordinary file")
+            return
+        }
+
+        guard let url = FinderXLink.makeOpenURL(for: urls[0]) else {
+            logger.error("copy link failed: could not build URL for \(urls[0].path, privacy: .public)")
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(url.absoluteString, forType: .string)
+        pasteboard.setString(url.absoluteString, forType: .URL)
+        logger.notice("copy link succeeded for \(urls[0].path, privacy: .public)")
+    }
+
     private static func selectedImageURLs() -> [URL] {
+        selectedItemURLsForAction().filter(Self.isSupportedImage)
+    }
+
+    private static func selectedItemURLsForAction() -> [URL] {
         let controller = FIFinderSyncController.default()
         var urls = controller.selectedItemURLs() ?? []
         if urls.isEmpty, let targetedURL = controller.targetedURL() {
             urls = [targetedURL]
         }
-        return urls.filter(Self.isSupportedImage)
+        return urls
     }
 
     private static func isSupportedImage(_ url: URL) -> Bool {
@@ -78,6 +110,13 @@ final class FinderSync: FIFinderSync {
         case "jpg", "jpeg", "png", "webp": return true
         default: return false
         }
+    }
+
+    private static func isOrdinaryFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isDirectory != true && values.isPackage != true
     }
 }
 

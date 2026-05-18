@@ -7,85 +7,125 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		086173D4526EABB297248755 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E7051887307CD01373F89 /* Cocoa.framework */; };
-		0D697E8F22A6377AAF6BFC7D /* ImageCompressionCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A0E90EDF2DA38436346AB5 /* ImageCompressionCore.swift */; };
-		19187F17FCBF43B0FB65D2F6 /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */; };
-		1CA1CF05581ACAC7CF7643C2 /* FinderXFinderExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 23F2145A75A8BD631CD909A1 /* FinderXFinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1F665991CCCBF3249222C842 /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */; };
-		357A8204E2787BA62282A249 /* ImageCompressionCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3DCAF9D7ADB0B0ECF2A95828 /* ImageCompressionCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF16A27B8AC894624F9D45 /* ImageCompressionCoreTests.swift */; };
-		6D50F6381E159E42A3FAD4E9 /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */; };
-		881E74C3405FE3C191012651 /* FinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F674FA0C5EEFD4C8474F54 /* FinderSync.swift */; };
-		A9DB2454191B05E7DBFD005D /* FinderXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B585ACC0FDCDD54C33C292 /* FinderXApp.swift */; };
-		B22745DCB2845988EAE2E206 /* ImageCompressionCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BBF4EEA54AAE0CE11CA5D65D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D627DB144362084705CA7FB7 /* main.swift */; };
-		CD527043A86F83DD66148F7E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E7051887307CD01373F89 /* Cocoa.framework */; };
-		E04DB1FB21C84A0549EB6D23 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E7051887307CD01373F89 /* Cocoa.framework */; };
-		E8ADC644BD68F38432ABB105 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E7051887307CD01373F89 /* Cocoa.framework */; };
-		F3DEA7FF4E824316C3549873 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E7051887307CD01373F89 /* Cocoa.framework */; };
+		16C13911FA5D11312949065B /* FinderXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF9D47350D310FC8E747BF /* FinderXApp.swift */; };
+		1FF2D0B19AAC1378A6A79282 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D232FCF48C7EC5B9B3FE54 /* main.swift */; };
+		346452106E42C20D2F1A15D6 /* ImageCompressionCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EC2E201C5F51266E27294A /* ImageCompressionCoreTests.swift */; };
+		39FD4F612D3140F26E56D861 /* FinderXLinking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4283522FE531666BC65FA0A0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		4C1AF0E0D05CC757275B4156 /* ImageCompressionCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		656058B556C1B1F95F9B69C9 /* FinderXFinderExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 60725308D455EF058DF34F62 /* FinderXFinderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6A12E8784F9AB171B488234B /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */; };
+		6A7CFC806361E89A48D26C0A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		6DBD2BE323F06270E2985E85 /* FinderXLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C96B72D29659123E238C4C /* FinderXLink.swift */; };
+		735366C3C81D6BB897E1A43F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		79AD41C3CAE59BEFEDC90B5C /* FinderXLinkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70032B7E316CC9762980418C /* FinderXLinkingTests.swift */; };
+		7D8FEFAA302B843868E1C786 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		892225F24A7C20696DBDCAE0 /* FinderXLinking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */; };
+		8C6F33AB72075D8F38DDB7B9 /* FinderXLinking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */; };
+		8D0AC4D4A7FAF79619204582 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		A5F369DB52D4563E03397CA3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		B77D1BE37C890A73D464B261 /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */; };
+		BAA40505F4D01FFB642B49A1 /* ImageCompressionCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F0D0E106D5D0CFFB592831 /* ImageCompressionCore.swift */; };
+		BEE967D92D04C13554E2C757 /* ImageCompressionCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */; };
+		C3D3C5263EDD7869FD8B20BB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8361427B9533957BF9C593 /* Cocoa.framework */; };
+		D2B7D646D8CB7CA0C901F9B6 /* FinderXLinking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */; };
+		EDD793E9D02FDE8ADCC3ECA3 /* FinderSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69217F552593A5911715384 /* FinderSync.swift */; };
+		F744DC9053D46BE47F3762A9 /* ImageCompressionCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0FC04654E2BB2F7D30EAD8B7 /* PBXContainerItemProxy */ = {
+		2129A32BF1A2877CEC5B7935 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF153A12A427882EE33D999F /* Project object */;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E95531E006C0FA7374A8A474;
+			remoteGlobalIDString = 9A359E5F88BC157D2B11F50F;
 			remoteInfo = ImageCompressionCore;
 		};
-		84CED0F738A4EDB13D68E6CC /* PBXContainerItemProxy */ = {
+		226E1413A30168B28438F768 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF153A12A427882EE33D999F /* Project object */;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E95531E006C0FA7374A8A474;
+			remoteGlobalIDString = AACE43C26A9319C941BA399B;
+			remoteInfo = FinderXLinking;
+		};
+		34D8CDAD1797A5E657EAA941 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AACE43C26A9319C941BA399B;
+			remoteInfo = FinderXLinking;
+		};
+		60EBC921884F837C0EA69BD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A359E5F88BC157D2B11F50F;
 			remoteInfo = ImageCompressionCore;
 		};
-		9A0729D4045E0DAFB989EE6F /* PBXContainerItemProxy */ = {
+		6DCA0733F72C5153C00EBA06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF153A12A427882EE33D999F /* Project object */;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E95531E006C0FA7374A8A474;
+			remoteGlobalIDString = 9A359E5F88BC157D2B11F50F;
 			remoteInfo = ImageCompressionCore;
 		};
-		F515BE541A4D2D4316D4B3BF /* PBXContainerItemProxy */ = {
+		860B85C274985862E13CA6C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = CF153A12A427882EE33D999F /* Project object */;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 528889CE14DB092F94C91C72;
+			remoteGlobalIDString = 3AA23F9F8C9962FA1EF6EA7A;
 			remoteInfo = FinderXFinderExtension;
+		};
+		8F507E1743A3A7D776AB9162 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7075C25A53D461BBEC75287D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AACE43C26A9319C941BA399B;
+			remoteInfo = FinderXLinking;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		187758B7A0A29C0150862F08 /* Embed Frameworks */ = {
+		0EC578487C1D284295556A32 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				357A8204E2787BA62282A249 /* ImageCompressionCore.framework in Embed Frameworks */,
+				4C1AF0E0D05CC757275B4156 /* ImageCompressionCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7132EC3DEBAE66469C21A93D /* Embed Frameworks */ = {
+		0F645FDDB5C8BA1025FA1019 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B22745DCB2845988EAE2E206 /* ImageCompressionCore.framework in Embed Frameworks */,
+				F744DC9053D46BE47F3762A9 /* ImageCompressionCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		849CDDD1613DE901D47F4AE5 /* Embed App Extensions */ = {
+		488F35187F32D4248EA4231C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				39FD4F612D3140F26E56D861 /* FinderXLinking.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE681F135D132FDC4B79A15C /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1CA1CF05581ACAC7CF7643C2 /* FinderXFinderExtension.appex in Embed App Extensions */,
+				656058B556C1B1F95F9B69C9 /* FinderXFinderExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,127 +133,161 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		094E2F5F3D84CF053AE6D1F4 /* FinderX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinderX.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		23F2145A75A8BD631CD909A1 /* FinderXFinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FinderXFinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		3AFB65F61344F9AD0D9826CA /* ImageCompressionCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageCompressionCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3BFF16A27B8AC894624F9D45 /* ImageCompressionCoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionCoreTests.swift; path = Tests/ImageCompressionCoreTests/ImageCompressionCoreTests.swift; sourceTree = "<group>"; };
-		70172DD23A62C194836B75CC /* ImageCompressionCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ImageCompressionCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		92A0E90EDF2DA38436346AB5 /* ImageCompressionCore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionCore.swift; path = Sources/ImageCompressionCore/ImageCompressionCore.swift; sourceTree = "<group>"; };
-		A1F674FA0C5EEFD4C8474F54 /* FinderSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderSync.swift; path = Sources/FinderXFinderExtension/FinderSync.swift; sourceTree = "<group>"; };
-		D348543C5240C110AC78B69A /* FinderXCompressCLI */ = {isa = PBXFileReference; includeInIndex = 0; path = FinderXCompressCLI; sourceTree = BUILT_PRODUCTS_DIR; };
-		D627DB144362084705CA7FB7 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Sources/FinderXCompressCLI/main.swift; sourceTree = "<group>"; };
-		E7B585ACC0FDCDD54C33C292 /* FinderXApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderXApp.swift; path = Sources/FinderXApp/FinderXApp.swift; sourceTree = "<group>"; };
-		F33E7051887307CD01373F89 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		01794EF76CF2A4F3949FBB98 /* ImageCompressionCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageCompressionCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B8361427B9533957BF9C593 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		15EC2E201C5F51266E27294A /* ImageCompressionCoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionCoreTests.swift; path = Tests/ImageCompressionCoreTests/ImageCompressionCoreTests.swift; sourceTree = "<group>"; };
+		2452AE0F709FCD7C7A4785CA /* FinderXLinkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FinderXLinkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FinderXLinking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		60725308D455EF058DF34F62 /* FinderXFinderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FinderXFinderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ImageCompressionCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70032B7E316CC9762980418C /* FinderXLinkingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderXLinkingTests.swift; path = Tests/FinderXLinkingTests/FinderXLinkingTests.swift; sourceTree = "<group>"; };
+		895187D59855AAF88C735EA8 /* FinderX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FinderX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		990A87EF2C06CE732613EFEE /* FinderXCompressCLI */ = {isa = PBXFileReference; includeInIndex = 0; path = FinderXCompressCLI; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2AF9D47350D310FC8E747BF /* FinderXApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderXApp.swift; path = Sources/FinderXApp/FinderXApp.swift; sourceTree = "<group>"; };
+		A4D232FCF48C7EC5B9B3FE54 /* main.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = main.swift; path = Sources/FinderXCompressCLI/main.swift; sourceTree = "<group>"; };
+		B8F0D0E106D5D0CFFB592831 /* ImageCompressionCore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImageCompressionCore.swift; path = Sources/ImageCompressionCore/ImageCompressionCore.swift; sourceTree = "<group>"; };
+		C69217F552593A5911715384 /* FinderSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderSync.swift; path = Sources/FinderXFinderExtension/FinderSync.swift; sourceTree = "<group>"; };
+		F6C96B72D29659123E238C4C /* FinderXLink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FinderXLink.swift; path = Sources/FinderXLinking/FinderXLink.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		02DFFAD71F2E70453CA1A338 /* Frameworks */ = {
+		097C67B0100C2FF5FCB0BBBA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				086173D4526EABB297248755 /* Cocoa.framework in Frameworks */,
-				6D50F6381E159E42A3FAD4E9 /* ImageCompressionCore.framework in Frameworks */,
+				8D0AC4D4A7FAF79619204582 /* Cocoa.framework in Frameworks */,
+				6A12E8784F9AB171B488234B /* ImageCompressionCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		436BAE61BB307A44522066BA /* Frameworks */ = {
+		62443B2D81537DF419D36BB9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD527043A86F83DD66148F7E /* Cocoa.framework in Frameworks */,
+				735366C3C81D6BB897E1A43F /* Cocoa.framework in Frameworks */,
+				D2B7D646D8CB7CA0C901F9B6 /* FinderXLinking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		76CD35D9C926E02FDFA7CF61 /* Frameworks */ = {
+		7ADF343E815380811FCD2472 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3DEA7FF4E824316C3549873 /* Cocoa.framework in Frameworks */,
+				6A7CFC806361E89A48D26C0A /* Cocoa.framework in Frameworks */,
+				B77D1BE37C890A73D464B261 /* ImageCompressionCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9EAB0B8C3BC6DEFB537804C1 /* Frameworks */ = {
+		8F44EC9A2DAECB66B0D657E7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E04DB1FB21C84A0549EB6D23 /* Cocoa.framework in Frameworks */,
-				1F665991CCCBF3249222C842 /* ImageCompressionCore.framework in Frameworks */,
+				A5F369DB52D4563E03397CA3 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D1E0A56650C9C130DC2DF31E /* Frameworks */ = {
+		AA2095D16FEE3DDDE80F5C14 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8ADC644BD68F38432ABB105 /* Cocoa.framework in Frameworks */,
-				19187F17FCBF43B0FB65D2F6 /* ImageCompressionCore.framework in Frameworks */,
+				7D8FEFAA302B843868E1C786 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE33089573A3328387B09302 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4283522FE531666BC65FA0A0 /* Cocoa.framework in Frameworks */,
+				BEE967D92D04C13554E2C757 /* ImageCompressionCore.framework in Frameworks */,
+				8C6F33AB72075D8F38DDB7B9 /* FinderXLinking.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E273BCEC26B1FF2DA91DA237 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3D3C5263EDD7869FD8B20BB /* Cocoa.framework in Frameworks */,
+				892225F24A7C20696DBDCAE0 /* FinderXLinking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		246DC91C64F8AC6656A4F454 /* Frameworks */ = {
+		33CB41645C3B649091DF56BD /* OS X */ = {
 			isa = PBXGroup;
 			children = (
-				7CB0C74C57A45A0B0B0154CD /* OS X */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		4C3832B2716ADD6EE664E7B3 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				3BFF16A27B8AC894624F9D45 /* ImageCompressionCoreTests.swift */,
-			);
-			name = Tests;
-			sourceTree = "<group>";
-		};
-		7CB0C74C57A45A0B0B0154CD /* OS X */ = {
-			isa = PBXGroup;
-			children = (
-				F33E7051887307CD01373F89 /* Cocoa.framework */,
+				0B8361427B9533957BF9C593 /* Cocoa.framework */,
 			);
 			name = "OS X";
 			sourceTree = "<group>";
 		};
-		7F78533719874DA8913105E2 /* Products */ = {
+		38DF3AA5DDE0F6A0DD7DFB0D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				70172DD23A62C194836B75CC /* ImageCompressionCore.framework */,
-				094E2F5F3D84CF053AE6D1F4 /* FinderX.app */,
-				23F2145A75A8BD631CD909A1 /* FinderXFinderExtension.appex */,
-				D348543C5240C110AC78B69A /* FinderXCompressCLI */,
-				3AFB65F61344F9AD0D9826CA /* ImageCompressionCoreTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		BD5D135C319471198082D508 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				92A0E90EDF2DA38436346AB5 /* ImageCompressionCore.swift */,
-				E7B585ACC0FDCDD54C33C292 /* FinderXApp.swift */,
-				A1F674FA0C5EEFD4C8474F54 /* FinderSync.swift */,
-				D627DB144362084705CA7FB7 /* main.swift */,
+				B8F0D0E106D5D0CFFB592831 /* ImageCompressionCore.swift */,
+				F6C96B72D29659123E238C4C /* FinderXLink.swift */,
+				A2AF9D47350D310FC8E747BF /* FinderXApp.swift */,
+				C69217F552593A5911715384 /* FinderSync.swift */,
+				A4D232FCF48C7EC5B9B3FE54 /* main.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
 		};
-		E67DBF2CA6A4ABF84DB4AE8D = {
+		95F538F7098D7DCDB955DB7E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7F78533719874DA8913105E2 /* Products */,
-				246DC91C64F8AC6656A4F454 /* Frameworks */,
-				BD5D135C319471198082D508 /* Sources */,
-				4C3832B2716ADD6EE664E7B3 /* Tests */,
+				6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */,
+				5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */,
+				895187D59855AAF88C735EA8 /* FinderX.app */,
+				60725308D455EF058DF34F62 /* FinderXFinderExtension.appex */,
+				990A87EF2C06CE732613EFEE /* FinderXCompressCLI */,
+				01794EF76CF2A4F3949FBB98 /* ImageCompressionCoreTests.xctest */,
+				2452AE0F709FCD7C7A4785CA /* FinderXLinkingTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		977484BBC2E9924CFA09094B /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				15EC2E201C5F51266E27294A /* ImageCompressionCoreTests.swift */,
+				70032B7E316CC9762980418C /* FinderXLinkingTests.swift */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		9D3F98F8C3185A02D6B5FFCA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33CB41645C3B649091DF56BD /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A95719F0E4331D5D3EE0EB5B = {
+			isa = PBXGroup;
+			children = (
+				95F538F7098D7DCDB955DB7E /* Products */,
+				9D3F98F8C3185A02D6B5FFCA /* Frameworks */,
+				38DF3AA5DDE0F6A0DD7DFB0D /* Sources */,
+				977484BBC2E9924CFA09094B /* Tests */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		2448B8CA46104BB100FEB682 /* Headers */ = {
+		0D960111D2CE5B1821AF1110 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FCDB99EAE1EB7C94B819ADC2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -223,88 +297,68 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1F3704DE0C4E6258F4862E3C /* ImageCompressionCoreTests */ = {
+		3AA23F9F8C9962FA1EF6EA7A /* FinderXFinderExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C13FC6A49B1C7FBD3E02361 /* Build configuration list for PBXNativeTarget "ImageCompressionCoreTests" */;
+			buildConfigurationList = A0022E8F8F94888AC388EC16 /* Build configuration list for PBXNativeTarget "FinderXFinderExtension" */;
 			buildPhases = (
-				19E526363A8B3DF7209FBF5B /* Sources */,
-				9EAB0B8C3BC6DEFB537804C1 /* Frameworks */,
-				800E25628412461C68D0FC85 /* Resources */,
+				BB8BF5AEE4619D48B38DD38C /* Sources */,
+				E273BCEC26B1FF2DA91DA237 /* Frameworks */,
+				64081749C77E8E45DCF94B2F /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				C08A23441B06ABA57D8DE02E /* PBXTargetDependency */,
-			);
-			name = ImageCompressionCoreTests;
-			productName = ImageCompressionCoreTests;
-			productReference = 3AFB65F61344F9AD0D9826CA /* ImageCompressionCoreTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		51A0741934B67F670385B5F5 /* FinderX */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E30D703AA6C85438795639ED /* Build configuration list for PBXNativeTarget "FinderX" */;
-			buildPhases = (
-				E59EB1D4EA0617EBDE16B4CC /* Sources */,
-				D1E0A56650C9C130DC2DF31E /* Frameworks */,
-				E283279530ECD1B0A5D3AE90 /* Resources */,
-				7132EC3DEBAE66469C21A93D /* Embed Frameworks */,
-				849CDDD1613DE901D47F4AE5 /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0F03F046F76A5A2E6C6BD7BC /* PBXTargetDependency */,
-				2F9DEFF94DA041509BA71C09 /* PBXTargetDependency */,
-			);
-			name = FinderX;
-			productName = FinderX;
-			productReference = 094E2F5F3D84CF053AE6D1F4 /* FinderX.app */;
-			productType = "com.apple.product-type.application";
-		};
-		528889CE14DB092F94C91C72 /* FinderXFinderExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2E646863944244B175C52B1B /* Build configuration list for PBXNativeTarget "FinderXFinderExtension" */;
-			buildPhases = (
-				8D1F7204FE3DF2FDC5D8A774 /* Sources */,
-				76CD35D9C926E02FDFA7CF61 /* Frameworks */,
-				7F0404D58008BE3E549963F4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
+				13A9672C33FFCAA072C1C367 /* PBXTargetDependency */,
 			);
 			name = FinderXFinderExtension;
 			productName = FinderXFinderExtension;
-			productReference = 23F2145A75A8BD631CD909A1 /* FinderXFinderExtension.appex */;
+			productReference = 60725308D455EF058DF34F62 /* FinderXFinderExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		C6373418FEA7F7C04F590887 /* FinderXCompressCLI */ = {
+		7531CEB67B9FB24C8C0AD9B9 /* FinderXLinkingTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FD4C3A5195BFB1B7B4759A7 /* Build configuration list for PBXNativeTarget "FinderXCompressCLI" */;
+			buildConfigurationList = D8751E46CAFAFD17C9E5C41C /* Build configuration list for PBXNativeTarget "FinderXLinkingTests" */;
 			buildPhases = (
-				ADC8ADEF159DC106AE0D0A69 /* Sources */,
-				02DFFAD71F2E70453CA1A338 /* Frameworks */,
-				187758B7A0A29C0150862F08 /* Embed Frameworks */,
+				DE92114F9948E5E4D5E7672A /* Sources */,
+				62443B2D81537DF419D36BB9 /* Frameworks */,
+				2672CE9EAE23FE23D2332409 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				87C4F82EE623CD00253E1E25 /* PBXTargetDependency */,
+				3CF1205EF4D0151731BBC3CC /* PBXTargetDependency */,
 			);
-			name = FinderXCompressCLI;
-			productName = FinderXCompressCLI;
-			productReference = D348543C5240C110AC78B69A /* FinderXCompressCLI */;
-			productType = "com.apple.product-type.tool";
+			name = FinderXLinkingTests;
+			productName = FinderXLinkingTests;
+			productReference = 2452AE0F709FCD7C7A4785CA /* FinderXLinkingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E95531E006C0FA7374A8A474 /* ImageCompressionCore */ = {
+		7E84AD8600A0398FBECFC4AB /* ImageCompressionCoreTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B900A3EE90749608C97C73E /* Build configuration list for PBXNativeTarget "ImageCompressionCore" */;
+			buildConfigurationList = 4922DD7BC91F247FEE3F0805 /* Build configuration list for PBXNativeTarget "ImageCompressionCoreTests" */;
 			buildPhases = (
-				2448B8CA46104BB100FEB682 /* Headers */,
-				743A2B15B808151E8B81765D /* Sources */,
-				436BAE61BB307A44522066BA /* Frameworks */,
-				DD31ACA9727B989D94F2FD94 /* Resources */,
+				6DE991444ABF8ABE6278885D /* Sources */,
+				097C67B0100C2FF5FCB0BBBA /* Frameworks */,
+				574524523F4038DA4EEF8331 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01CE96F30CA96F4A69CE8211 /* PBXTargetDependency */,
+			);
+			name = ImageCompressionCoreTests;
+			productName = ImageCompressionCoreTests;
+			productReference = 01794EF76CF2A4F3949FBB98 /* ImageCompressionCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9A359E5F88BC157D2B11F50F /* ImageCompressionCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0C02015B95430B7CC6C1223 /* Build configuration list for PBXNativeTarget "ImageCompressionCore" */;
+			buildPhases = (
+				0D960111D2CE5B1821AF1110 /* Headers */,
+				44E619F0BBD08409CDE53F89 /* Sources */,
+				8F44EC9A2DAECB66B0D657E7 /* Frameworks */,
+				EC3355E519FC709F580F77A4 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -312,19 +366,78 @@
 			);
 			name = ImageCompressionCore;
 			productName = ImageCompressionCore;
-			productReference = 70172DD23A62C194836B75CC /* ImageCompressionCore.framework */;
+			productReference = 6D6C7E00CE194F8A566B5FA2 /* ImageCompressionCore.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		AACE43C26A9319C941BA399B /* FinderXLinking */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9F166C90B33C6DA07D34290B /* Build configuration list for PBXNativeTarget "FinderXLinking" */;
+			buildPhases = (
+				FCDB99EAE1EB7C94B819ADC2 /* Headers */,
+				0896C3FF9971484F4663403A /* Sources */,
+				AA2095D16FEE3DDDE80F5C14 /* Frameworks */,
+				714471FD1F2739C8BDB5B0B1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FinderXLinking;
+			productName = FinderXLinking;
+			productReference = 5927C4C0E365083FC08D3ECB /* FinderXLinking.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C8855DB986F1777DBF615269 /* FinderX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9537907D362A7863E285BEF0 /* Build configuration list for PBXNativeTarget "FinderX" */;
+			buildPhases = (
+				F9C749D8708C599F6B7E20FA /* Sources */,
+				CE33089573A3328387B09302 /* Frameworks */,
+				19C0A1F16725557CE57302FD /* Resources */,
+				0F645FDDB5C8BA1025FA1019 /* Embed Frameworks */,
+				488F35187F32D4248EA4231C /* Embed Frameworks */,
+				DE681F135D132FDC4B79A15C /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C8140C8EB859D516B2432DF7 /* PBXTargetDependency */,
+				BF6FE35314FAA69656299724 /* PBXTargetDependency */,
+				37AE44465E8013501BBD5DC5 /* PBXTargetDependency */,
+			);
+			name = FinderX;
+			productName = FinderX;
+			productReference = 895187D59855AAF88C735EA8 /* FinderX.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FFDB9612F9A04C46B0D98AF7 /* FinderXCompressCLI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1176F6D2DBBB16930989AE80 /* Build configuration list for PBXNativeTarget "FinderXCompressCLI" */;
+			buildPhases = (
+				4E4A24299AC0C39497F1C69A /* Sources */,
+				7ADF343E815380811FCD2472 /* Frameworks */,
+				0EC578487C1D284295556A32 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D510DEFC52BC22A8BD0D828B /* PBXTargetDependency */,
+			);
+			name = FinderXCompressCLI;
+			productName = FinderXCompressCLI;
+			productReference = 990A87EF2C06CE732613EFEE /* FinderXCompressCLI */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		CF153A12A427882EE33D999F /* Project object */ = {
+		7075C25A53D461BBEC75287D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = B5E168BB85FF88F3AB0DFFFD /* Build configuration list for PBXProject "FinderX" */;
+			buildConfigurationList = 54E898C1DBAA1EE670D4B17E /* Build configuration list for PBXProject "FinderX" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -332,43 +445,59 @@
 				en,
 				Base,
 			);
-			mainGroup = E67DBF2CA6A4ABF84DB4AE8D;
-			productRefGroup = 7F78533719874DA8913105E2 /* Products */;
+			mainGroup = A95719F0E4331D5D3EE0EB5B;
+			productRefGroup = 95F538F7098D7DCDB955DB7E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E95531E006C0FA7374A8A474 /* ImageCompressionCore */,
-				51A0741934B67F670385B5F5 /* FinderX */,
-				528889CE14DB092F94C91C72 /* FinderXFinderExtension */,
-				C6373418FEA7F7C04F590887 /* FinderXCompressCLI */,
-				1F3704DE0C4E6258F4862E3C /* ImageCompressionCoreTests */,
+				9A359E5F88BC157D2B11F50F /* ImageCompressionCore */,
+				AACE43C26A9319C941BA399B /* FinderXLinking */,
+				C8855DB986F1777DBF615269 /* FinderX */,
+				3AA23F9F8C9962FA1EF6EA7A /* FinderXFinderExtension */,
+				FFDB9612F9A04C46B0D98AF7 /* FinderXCompressCLI */,
+				7E84AD8600A0398FBECFC4AB /* ImageCompressionCoreTests */,
+				7531CEB67B9FB24C8C0AD9B9 /* FinderXLinkingTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		7F0404D58008BE3E549963F4 /* Resources */ = {
+		19C0A1F16725557CE57302FD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		800E25628412461C68D0FC85 /* Resources */ = {
+		2672CE9EAE23FE23D2332409 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DD31ACA9727B989D94F2FD94 /* Resources */ = {
+		574524523F4038DA4EEF8331 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E283279530ECD1B0A5D3AE90 /* Resources */ = {
+		64081749C77E8E45DCF94B2F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		714471FD1F2739C8BDB5B0B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC3355E519FC709F580F77A4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -378,255 +507,111 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		19E526363A8B3DF7209FBF5B /* Sources */ = {
+		0896C3FF9971484F4663403A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DCAF9D7ADB0B0ECF2A95828 /* ImageCompressionCoreTests.swift in Sources */,
+				6DBD2BE323F06270E2985E85 /* FinderXLink.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		743A2B15B808151E8B81765D /* Sources */ = {
+		44E619F0BBD08409CDE53F89 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D697E8F22A6377AAF6BFC7D /* ImageCompressionCore.swift in Sources */,
+				BAA40505F4D01FFB642B49A1 /* ImageCompressionCore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8D1F7204FE3DF2FDC5D8A774 /* Sources */ = {
+		4E4A24299AC0C39497F1C69A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				881E74C3405FE3C191012651 /* FinderSync.swift in Sources */,
+				1FF2D0B19AAC1378A6A79282 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ADC8ADEF159DC106AE0D0A69 /* Sources */ = {
+		6DE991444ABF8ABE6278885D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBF4EEA54AAE0CE11CA5D65D /* main.swift in Sources */,
+				346452106E42C20D2F1A15D6 /* ImageCompressionCoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E59EB1D4EA0617EBDE16B4CC /* Sources */ = {
+		BB8BF5AEE4619D48B38DD38C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9DB2454191B05E7DBFD005D /* FinderXApp.swift in Sources */,
+				EDD793E9D02FDE8ADCC3ECA3 /* FinderSync.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE92114F9948E5E4D5E7672A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79AD41C3CAE59BEFEDC90B5C /* FinderXLinkingTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9C749D8708C599F6B7E20FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16C13911FA5D11312949065B /* FinderXApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0F03F046F76A5A2E6C6BD7BC /* PBXTargetDependency */ = {
+		01CE96F30CA96F4A69CE8211 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ImageCompressionCore;
-			target = E95531E006C0FA7374A8A474 /* ImageCompressionCore */;
-			targetProxy = 0FC04654E2BB2F7D30EAD8B7 /* PBXContainerItemProxy */;
+			target = 9A359E5F88BC157D2B11F50F /* ImageCompressionCore */;
+			targetProxy = 60EBC921884F837C0EA69BD7 /* PBXContainerItemProxy */;
 		};
-		2F9DEFF94DA041509BA71C09 /* PBXTargetDependency */ = {
+		13A9672C33FFCAA072C1C367 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FinderXLinking;
+			target = AACE43C26A9319C941BA399B /* FinderXLinking */;
+			targetProxy = 226E1413A30168B28438F768 /* PBXContainerItemProxy */;
+		};
+		37AE44465E8013501BBD5DC5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FinderXFinderExtension;
-			target = 528889CE14DB092F94C91C72 /* FinderXFinderExtension */;
-			targetProxy = F515BE541A4D2D4316D4B3BF /* PBXContainerItemProxy */;
+			target = 3AA23F9F8C9962FA1EF6EA7A /* FinderXFinderExtension */;
+			targetProxy = 860B85C274985862E13CA6C8 /* PBXContainerItemProxy */;
 		};
-		87C4F82EE623CD00253E1E25 /* PBXTargetDependency */ = {
+		3CF1205EF4D0151731BBC3CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FinderXLinking;
+			target = AACE43C26A9319C941BA399B /* FinderXLinking */;
+			targetProxy = 34D8CDAD1797A5E657EAA941 /* PBXContainerItemProxy */;
+		};
+		BF6FE35314FAA69656299724 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FinderXLinking;
+			target = AACE43C26A9319C941BA399B /* FinderXLinking */;
+			targetProxy = 8F507E1743A3A7D776AB9162 /* PBXContainerItemProxy */;
+		};
+		C8140C8EB859D516B2432DF7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ImageCompressionCore;
-			target = E95531E006C0FA7374A8A474 /* ImageCompressionCore */;
-			targetProxy = 84CED0F738A4EDB13D68E6CC /* PBXContainerItemProxy */;
+			target = 9A359E5F88BC157D2B11F50F /* ImageCompressionCore */;
+			targetProxy = 6DCA0733F72C5153C00EBA06 /* PBXContainerItemProxy */;
 		};
-		C08A23441B06ABA57D8DE02E /* PBXTargetDependency */ = {
+		D510DEFC52BC22A8BD0D828B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ImageCompressionCore;
-			target = E95531E006C0FA7374A8A474 /* ImageCompressionCore */;
-			targetProxy = 9A0729D4045E0DAFB989EE6F /* PBXContainerItemProxy */;
+			target = 9A359E5F88BC157D2B11F50F /* ImageCompressionCore */;
+			targetProxy = 2129A32BF1A2877CEC5B7935 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0854F55D1A92C455F6F6907B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = FinderXFinderExtension/Resources/FinderXFinderExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = FinderXFinderExtension/Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX.FinderExtension;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Release;
-		};
-		15153B6E728E20DA0A6EC060 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCore;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 6.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		294349916CC2C401F1A824CE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCoreTests;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Release;
-		};
-		2C4C4A49036E03B1A7FC8851 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = FinderX/Resources/FinderX.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = FinderX/Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Release;
-		};
-		4F014A42AE7E6979B6A0842E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXCompressCLI;
-				PRODUCT_NAME = "finderx-compress";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Debug;
-		};
-		4FACE524D2021D5E122ADCAF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCore;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 6.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		53431850F0A6A1780AA95EE8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXCompressCLI;
-				PRODUCT_NAME = "finderx-compress";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Release;
-		};
-		75BC0BB26DA86FD9F312E2EC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = FinderX/Resources/FinderX.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = FinderX/Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Debug;
-		};
-		78C815F0B19EF3DE302DA967 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCoreTests;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.0;
-			};
-			name = Debug;
-		};
-		A163794D0E12390B0E02B23A /* Release */ = {
+		06E75D1E654A10D80207A846 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -680,7 +665,23 @@
 			};
 			name = Release;
 		};
-		C426EEF5B34337EAFAFEAE8E /* Debug */ = {
+		15D7F7A088BFB241EEC81B98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXCompressCLI;
+				PRODUCT_NAME = "finderx-compress";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		1A8DC062A6F2549C5BC2FAAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
@@ -696,9 +697,81 @@
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;
 			};
+			name = Release;
+		};
+		1D1D042663237F40C65BC6D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXLinking;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		34E29AA20EC3F45F4923A753 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXLinking;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
 			name = Debug;
 		};
-		EA6631D13B2704AA72380864 /* Debug */ = {
+		5962206603AD47012FE71463 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXCompressCLI;
+				PRODUCT_NAME = "finderx-compress";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		78760CA2C20ECA7BA77A23FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -759,64 +832,260 @@
 			};
 			name = Debug;
 		};
+		A4EA2257CB5D096676DAF080 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FinderX/Resources/FinderX.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = FinderX/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B1DAA2F631FD0BCD4F1DB487 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FinderX/Resources/FinderX.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = FinderX/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		BCA079F56892226387B4B9B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCoreTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		C484FF5F07123FD7FFD90F3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCoreTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		C77B8F0899231670B5362A18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		DFED2EE3B22BFCE412CA7156 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FinderXFinderExtension/Resources/FinderXFinderExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = FinderXFinderExtension/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderX.FinderExtension;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		E0D5A1D651E1ADF2F16A6F96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXLinkingTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		F0E247E084E5483E3AB55CE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.FinderXLinkingTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		F5E8A8E3A8622E866493C7E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.finderx.ImageCompressionCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FD4C3A5195BFB1B7B4759A7 /* Build configuration list for PBXNativeTarget "FinderXCompressCLI" */ = {
+		1176F6D2DBBB16930989AE80 /* Build configuration list for PBXNativeTarget "FinderXCompressCLI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				53431850F0A6A1780AA95EE8 /* Release */,
-				4F014A42AE7E6979B6A0842E /* Debug */,
+				15D7F7A088BFB241EEC81B98 /* Release */,
+				5962206603AD47012FE71463 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2E646863944244B175C52B1B /* Build configuration list for PBXNativeTarget "FinderXFinderExtension" */ = {
+		4922DD7BC91F247FEE3F0805 /* Build configuration list for PBXNativeTarget "ImageCompressionCoreTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0854F55D1A92C455F6F6907B /* Release */,
-				C426EEF5B34337EAFAFEAE8E /* Debug */,
+				BCA079F56892226387B4B9B8 /* Release */,
+				C484FF5F07123FD7FFD90F3F /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B900A3EE90749608C97C73E /* Build configuration list for PBXNativeTarget "ImageCompressionCore" */ = {
+		54E898C1DBAA1EE670D4B17E /* Build configuration list for PBXProject "FinderX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				15153B6E728E20DA0A6EC060 /* Release */,
-				4FACE524D2021D5E122ADCAF /* Debug */,
+				78760CA2C20ECA7BA77A23FD /* Debug */,
+				06E75D1E654A10D80207A846 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C13FC6A49B1C7FBD3E02361 /* Build configuration list for PBXNativeTarget "ImageCompressionCoreTests" */ = {
+		9537907D362A7863E285BEF0 /* Build configuration list for PBXNativeTarget "FinderX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				294349916CC2C401F1A824CE /* Release */,
-				78C815F0B19EF3DE302DA967 /* Debug */,
+				B1DAA2F631FD0BCD4F1DB487 /* Release */,
+				A4EA2257CB5D096676DAF080 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B5E168BB85FF88F3AB0DFFFD /* Build configuration list for PBXProject "FinderX" */ = {
+		9F166C90B33C6DA07D34290B /* Build configuration list for PBXNativeTarget "FinderXLinking" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				EA6631D13B2704AA72380864 /* Debug */,
-				A163794D0E12390B0E02B23A /* Release */,
+				1D1D042663237F40C65BC6D9 /* Release */,
+				34E29AA20EC3F45F4923A753 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E30D703AA6C85438795639ED /* Build configuration list for PBXNativeTarget "FinderX" */ = {
+		A0022E8F8F94888AC388EC16 /* Build configuration list for PBXNativeTarget "FinderXFinderExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2C4C4A49036E03B1A7FC8851 /* Release */,
-				75BC0BB26DA86FD9F312E2EC /* Debug */,
+				1A8DC062A6F2549C5BC2FAAC /* Release */,
+				DFED2EE3B22BFCE412CA7156 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D8751E46CAFAFD17C9E5C41C /* Build configuration list for PBXNativeTarget "FinderXLinkingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0E247E084E5483E3AB55CE3 /* Release */,
+				E0D5A1D651E1ADF2F16A6F96 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0C02015B95430B7CC6C1223 /* Build configuration list for PBXNativeTarget "ImageCompressionCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5E8A8E3A8622E866493C7E0 /* Release */,
+				C77B8F0899231670B5362A18 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = CF153A12A427882EE33D999F /* Project object */;
+	rootObject = 7075C25A53D461BBEC75287D /* Project object */;
 }

@@ -49,11 +49,22 @@ core.build_configurations.each do |config|
   config.build_settings["CURRENT_PROJECT_VERSION"] = "1"
 end
 
+linking = project.new_target(:framework, "FinderXLinking", :osx, "14.0")
+configure_common(linking, "dev.finderx.FinderXLinking")
+add_sources(project, linking, "Sources", ["Sources/FinderXLinking/FinderXLink.swift"])
+linking.build_configurations.each do |config|
+  config.build_settings["GENERATE_INFOPLIST_FILE"] = "YES"
+  config.build_settings["MARKETING_VERSION"] = "0.1.0"
+  config.build_settings["CURRENT_PROJECT_VERSION"] = "1"
+end
+
 app = project.new_target(:application, "FinderX", :osx, "14.0")
 configure_common(app, "dev.finderx.FinderX")
 add_sources(project, app, "Sources", ["Sources/FinderXApp/FinderXApp.swift"])
 link_framework(app, core)
+link_framework(app, linking)
 embed_framework(app, core)
+embed_framework(app, linking)
 app.build_configurations.each do |config|
   config.build_settings["INFOPLIST_FILE"] = "FinderX/Resources/Info.plist"
   config.build_settings["CODE_SIGN_ENTITLEMENTS"] = "FinderX/Resources/FinderX.entitlements"
@@ -63,6 +74,7 @@ end
 extension = project.new_target(:app_extension, "FinderXFinderExtension", :osx, "14.0")
 configure_common(extension, "dev.finderx.FinderX.FinderExtension")
 add_sources(project, extension, "Sources", ["Sources/FinderXFinderExtension/FinderSync.swift"])
+link_framework(extension, linking)
 extension.build_configurations.each do |config|
   config.build_settings["INFOPLIST_FILE"] = "FinderXFinderExtension/Resources/Info.plist"
   config.build_settings["CODE_SIGN_ENTITLEMENTS"] = "FinderXFinderExtension/Resources/FinderXFinderExtension.entitlements"
@@ -95,11 +107,21 @@ tests.build_configurations.each do |config|
   config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks"
 end
 
+link_tests = project.new_target(:unit_test_bundle, "FinderXLinkingTests", :osx, "14.0")
+configure_common(link_tests, "dev.finderx.FinderXLinkingTests")
+add_sources(project, link_tests, "Tests", ["Tests/FinderXLinkingTests/FinderXLinkingTests.swift"])
+link_framework(link_tests, linking)
+link_tests.build_configurations.each do |config|
+  config.build_settings["GENERATE_INFOPLIST_FILE"] = "YES"
+  config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks"
+end
+
 scheme = Xcodeproj::XCScheme.new
 scheme.add_build_target(app)
 scheme.add_build_target(extension)
 scheme.add_build_target(cli)
 scheme.add_test_target(tests)
+scheme.add_test_target(link_tests)
 scheme.set_launch_target(app)
 scheme.save_as(PROJECT_PATH, "FinderX", true)
 

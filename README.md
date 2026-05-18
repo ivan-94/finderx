@@ -5,10 +5,12 @@ FinderX is a macOS file extension app. The first vertical slice adds image compr
 ## Current Targets
 
 - `FinderX`: SwiftUI macOS app with a compression window and settings screen.
-- `FinderXFinderExtension`: Finder Sync Extension that contributes `Compress Image with FinderX...`.
+- `FinderXFinderExtension`: Finder Sync Extension that contributes `Compress with FinderX` and `Copy FinderX Link`.
 - `ImageCompressionCore`: shared image inspection, output naming, and compression engine.
+- `FinderXLinking`: shared FinderX deep-link creation and resolution.
 - `FinderXCompressCLI`: command-line smoke-test entry point for the same compression core.
 - `ImageCompressionCoreTests`: core behavior tests.
+- `FinderXLinkingTests`: deep-link behavior tests.
 
 ## Build
 
@@ -24,7 +26,7 @@ For Finder acceptance on a local machine, use the debug installer:
 scripts/install_debug_app.sh
 ```
 
-This intentionally runs unsigned tests in `.build/TestDerivedData`, then builds the locally signed Finder-loadable app in `.build/DerivedData`, bundles the local `cwebp` encoder for WebP output, registers and enables the Finder Sync Extension, and restarts Finder. Do not run `CODE_SIGNING_ALLOWED=NO test` against `.build/DerivedData` after installing the extension; that can overwrite the signed app bundle and make the contextual menu disappear.
+This intentionally runs unsigned tests in `.build/TestDerivedData`, then builds the locally signed Finder-loadable app in `.build/DerivedData`, bundles the local `cwebp` encoder for WebP output, refreshes Launch Services and Finder Services, registers and enables the Finder Sync Extension, and restarts Finder. Do not run `CODE_SIGNING_ALLOWED=NO test` against `.build/DerivedData` after installing the extension; that can overwrite the signed app bundle and make the contextual menu disappear.
 
 WebP output requires Homebrew `webp` on the development machine:
 
@@ -45,6 +47,14 @@ xcodebuild -project FinderX.xcodeproj -scheme FinderX -destination platform=macO
 ```
 
 If `xcodebuild test` cannot contact `testmanagerd` from a sandboxed agent session, run the same command outside the sandbox.
+
+## FinderX Links
+
+Right-clicking one ordinary file in a monitored Finder folder shows `Copy FinderX Link`. The action silently copies a `finderx://open?...` URL to the clipboard as both text and URL pasteboard content.
+
+For iCloud Drive files, Finder may not invoke Finder Sync contextual menus. FinderX also registers Finder Services for `Compress with FinderX` and `Copy FinderX Link`; use Finder's `Services` menu when the top-level Finder Sync items are not available.
+
+iCloud Drive files include a migratable `icloud` relative path plus an absolute `file` fallback. Opening a copied link resolves the iCloud path first, falls back to the absolute path when needed, and delegates the file to macOS default app handling without showing the FinderX compression window.
 
 ## Smoke Test Compression
 

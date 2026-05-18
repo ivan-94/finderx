@@ -1,5 +1,6 @@
 import AppKit
 import Darwin
+import FinderXLinking
 import ImageCompressionCore
 import OSLog
 import SwiftUI
@@ -16,6 +17,14 @@ struct FinderXApp: App {
                 .frame(minWidth: 840, minHeight: 560)
                 .onOpenURL { url in
                     router.open(url)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .finderXCompressURLsRequested)) { notification in
+                    guard let urls = notification.object as? [URL] else { return }
+                    router.openCompression(urls)
+                }
+                .onAppear {
+                    guard let urls = FinderXServiceRequests.takePendingCompressionURLs() else { return }
+                    router.openCompression(urls)
                 }
         }
         .commands {
@@ -36,9 +45,12 @@ struct FinderXApp: App {
 
 final class FinderXAppDelegate: NSObject, NSApplicationDelegate {
     private var hideWorkItem: DispatchWorkItem?
+    private let servicesProvider = FinderXServicesProvider()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        NSApp.servicesProvider = servicesProvider
+        NSUpdateDynamicServices()
     }
 
     func applicationDidResignActive(_ notification: Notification) {
@@ -60,6 +72,128 @@ final class FinderXAppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         AppPresentation.show()
         return true
+    }
+}
+
+final class FinderXServicesProvider: NSObject {
+    private let logger = Logger(subsystem: "dev.finderx.FinderX", category: "Services")
+
+    @objc(compressWithFinderXService:userData:error:)
+    func compressWithFinderXService(
+        _ pasteboard: NSPasteboard,
+        userData: String?,
+        error: AutoreleasingUnsafeMutablePointer<NSString?>?
+    ) {
+        let imageURLs = fileURLs(from: pasteboard).filter(ImageInspector.isSupportedImage)
+        guard !imageURLs.isEmpty else {
+            error?.pointee = "Select one supported image." as NSString
+            logger.notice("compress service ignored: no supported images")
+            return
+        }
+
+        let scopedURLs = imageURLs.filter { $0.startAccessingSecurityScopedResource() }
+        Task { @MainActor in
+            FinderXServiceRequests.requestCompression(imageURLs, scopedURLs: scopedURLs)
+        }
+        logger.notice("compress service opened image count=\(imageURLs.count, privacy: .public)")
+    }
+
+    @objc(copyFinderXLinkService:userData:error:)
+    func copyFinderXLinkService(
+        _ pasteboard: NSPasteboard,
+        userData: String?,
+        error: AutoreleasingUnsafeMutablePointer<NSString?>?
+    ) {
+        let urls = fileURLs(from: pasteboard)
+        guard urls.count == 1 else {
+            error?.pointee = "Select one file." as NSString
+            logger.notice("service ignored: expected one file, got \(urls.count, privacy: .public)")
+            return
+        }
+
+        guard isOrdinaryFile(urls[0]) else {
+            error?.pointee = "Selected item is not a file." as NSString
+            logger.notice("service ignored: selected item is not an ordinary file")
+            return
+        }
+
+        guard let link = FinderXLink.makeOpenURL(for: urls[0]) else {
+            error?.pointee = "Could not create FinderX link." as NSString
+            logger.error("service failed: could not build link for \(urls[0].path, privacy: .public)")
+            return
+        }
+
+        let general = NSPasteboard.general
+        general.clearContents()
+        general.setString(link.absoluteString, forType: .string)
+        general.setString(link.absoluteString, forType: .URL)
+        logger.notice("service copied link for \(urls[0].path, privacy: .public)")
+    }
+
+    private func fileURLs(from pasteboard: NSPasteboard) -> [URL] {
+        var urls: [URL] = []
+
+        let readOptions: [NSPasteboard.ReadingOptionKey: Any] = [
+            .urlReadingFileURLsOnly: true
+        ]
+        if let readURLs = pasteboard.readObjects(
+            forClasses: [NSURL.self],
+            options: readOptions
+        ) as? [NSURL] {
+            urls.append(contentsOf: readURLs.map { $0 as URL }.filter(\.isFileURL))
+        }
+
+        if let items = pasteboard.pasteboardItems {
+            for item in items {
+                if let value = item.string(forType: .fileURL) ?? item.string(forType: .URL),
+                   let url = URL(string: value),
+                   url.isFileURL {
+                    urls.append(url)
+                }
+            }
+        }
+
+        if urls.isEmpty,
+           let paths = pasteboard.propertyList(forType: NSPasteboard.PasteboardType("NSFilenamesPboardType")) as? [String] {
+            urls = paths.map { URL(fileURLWithPath: $0) }
+        }
+
+        var seen = Set<URL>()
+        return urls.filter { seen.insert($0).inserted }
+    }
+
+    private func isOrdinaryFile(_ url: URL) -> Bool {
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey]) else {
+            return false
+        }
+        return values.isRegularFile == true && values.isDirectory != true && values.isPackage != true
+    }
+}
+
+private extension Notification.Name {
+    static let finderXCompressURLsRequested = Notification.Name("dev.finderx.compressURLsRequested")
+}
+
+@MainActor
+private enum FinderXServiceRequests {
+    private static var pendingCompressionURLs: [URL]?
+    private static var serviceScopedURLs: [URL] = []
+
+    static func requestCompression(_ urls: [URL], scopedURLs: [URL]) {
+        stopAccessingServiceScopedURLs()
+        serviceScopedURLs = scopedURLs
+        pendingCompressionURLs = urls
+        NotificationCenter.default.post(name: .finderXCompressURLsRequested, object: urls)
+    }
+
+    static func takePendingCompressionURLs() -> [URL]? {
+        defer { pendingCompressionURLs = nil }
+        return pendingCompressionURLs
+    }
+
+    private static func stopAccessingServiceScopedURLs() {
+        serviceScopedURLs.forEach { $0.stopAccessingSecurityScopedResource() }
+        serviceScopedURLs = []
     }
 }
 
@@ -90,15 +224,32 @@ private extension NSWindow {
 @MainActor
 final class CompressionRouter: ObservableObject {
     @Published var selectedURLs: [URL] = []
+    private let logger = Logger(subsystem: "dev.finderx.FinderX", category: "URLRouter")
+    private var securityScopedURLs: [URL] = []
 
     func open(_ url: URL) {
-        guard url.scheme == "finderx", url.host == "compress" else { return }
+        guard url.scheme == "finderx" else { return }
+        if url.host == "open" {
+            guard let fileURL = FinderXLink.resolveOpenURL(url) else {
+                logger.notice("open link ignored: could not resolve \(url.absoluteString, privacy: .public)")
+                return
+            }
+            NSWorkspace.shared.open(fileURL)
+            return
+        }
+
+        guard url.host == "compress" else { return }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let files = components?.queryItems?
             .filter { $0.name == "file" }
             .compactMap(\.value)
             .compactMap { URL(fileURLWithPath: $0) } ?? []
-        selectedURLs = files
+        select(files)
+        AppPresentation.show()
+    }
+
+    func openCompression(_ urls: [URL]) {
+        select(urls)
         AppPresentation.show()
     }
 
@@ -108,9 +259,20 @@ final class CompressionRouter: ObservableObject {
         panel.canChooseDirectories = false
         panel.allowedContentTypes = [.jpeg, .png, .webP]
         if panel.runModal() == .OK {
-            selectedURLs = panel.urls
+            select(panel.urls)
             AppPresentation.show()
         }
+    }
+
+    private func select(_ urls: [URL]) {
+        stopAccessingSelectedURLs()
+        securityScopedURLs = urls.filter { $0.startAccessingSecurityScopedResource() }
+        selectedURLs = urls
+    }
+
+    private func stopAccessingSelectedURLs() {
+        securityScopedURLs.forEach { $0.stopAccessingSecurityScopedResource() }
+        securityScopedURLs = []
     }
 }
 

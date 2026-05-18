@@ -7,8 +7,11 @@ SCHEME="FinderX"
 APP_DERIVED_DATA="${ROOT}/.build/DerivedData"
 TEST_DERIVED_DATA="${ROOT}/.build/TestDerivedData"
 APP_PATH="${APP_DERIVED_DATA}/Build/Products/Debug/FinderX.app"
+TEST_APP_PATH="${TEST_DERIVED_DATA}/Build/Products/Debug/FinderX.app"
 APP_ENTITLEMENTS="${ROOT}/FinderX/Resources/FinderX.entitlements"
 EXTENSION_ID="dev.finderx.FinderX.FinderExtension"
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister"
+PBS="/System/Library/CoreServices/pbs"
 
 RUN_TESTS=1
 RESTART_FINDER=1
@@ -95,6 +98,15 @@ embed_webp_helper() {
   codesign --force --sign - --timestamp=none "${bin_dir}/cwebp"
 }
 
+refresh_services() {
+  if [[ -d "${TEST_APP_PATH}" ]]; then
+    "${LSREGISTER}" -u "${TEST_APP_PATH}" >/dev/null 2>&1 || true
+  fi
+  "${LSREGISTER}" -f -R -trusted "${APP_PATH}" >/dev/null 2>&1 || true
+  "${PBS}" -flush >/dev/null 2>&1 || true
+  "${PBS}" -update >/dev/null 2>&1 || true
+}
+
 cd "${ROOT}"
 
 log "Generating Xcode project"
@@ -127,6 +139,9 @@ log "Verifying app entitlements"
 codesign -d --entitlements :- "${APP_PATH}" 2>/dev/null | grep -q "com.apple.security.app-sandbox"
 codesign -d --entitlements :- "${APP_PATH}" 2>/dev/null | grep -q "com.apple.security.files.downloads.read-write"
 codesign -d --entitlements :- "${APP_PATH}/Contents/PlugIns/FinderXFinderExtension.appex" 2>/dev/null | grep -q "com.apple.security.app-sandbox"
+
+log "Refreshing Launch Services and Finder Services"
+refresh_services
 
 log "Registering and enabling Finder Sync Extension"
 pluginkit -a "${APP_PATH}"
