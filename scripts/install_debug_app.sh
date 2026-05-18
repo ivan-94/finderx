@@ -8,6 +8,9 @@ APP_DERIVED_DATA="${ROOT}/.build/DerivedData"
 TEST_DERIVED_DATA="${ROOT}/.build/TestDerivedData"
 APP_PATH="${APP_DERIVED_DATA}/Build/Products/Debug/FinderX.app"
 TEST_APP_PATH="${TEST_DERIVED_DATA}/Build/Products/Debug/FinderX.app"
+INSTALLER_APP_PATH="${ROOT}/.build/InstallerDerivedData/Build/Products/Release/FinderX.app"
+STAGING_APP_PATH="${ROOT}/.build/installer-staging/FinderX.app"
+INSTALLED_APP_PATH="/Applications/FinderX.app"
 APP_ENTITLEMENTS="${ROOT}/FinderX/Resources/FinderX.entitlements"
 EXTENSION_ID="dev.finderx.FinderX.FinderExtension"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister"
@@ -99,12 +102,30 @@ embed_webp_helper() {
 }
 
 refresh_services() {
-  if [[ -d "${TEST_APP_PATH}" ]]; then
-    "${LSREGISTER}" -u "${TEST_APP_PATH}" >/dev/null 2>&1 || true
-  fi
-  "${LSREGISTER}" -f -R -trusted "${APP_PATH}" >/dev/null 2>&1 || true
+  local stale_app
+  for stale_app in \
+    "${APP_PATH}" \
+    "${TEST_APP_PATH}" \
+    "${INSTALLER_APP_PATH}" \
+    "${STAGING_APP_PATH}"; do
+    if [[ -d "${stale_app}" ]]; then
+      "${LSREGISTER}" -u "${stale_app}" >/dev/null 2>&1 || true
+    fi
+  done
+  "${LSREGISTER}" -f -R -trusted "${INSTALLED_APP_PATH}" >/dev/null 2>&1 || true
   "${PBS}" -flush >/dev/null 2>&1 || true
   "${PBS}" -update >/dev/null 2>&1 || true
+}
+
+remove_local_app_products() {
+  local stale_app
+  for stale_app in \
+    "${APP_PATH}" \
+    "${TEST_APP_PATH}" \
+    "${INSTALLER_APP_PATH}" \
+    "${STAGING_APP_PATH}"; do
+    rm -rf "${stale_app}"
+  done
 }
 
 cd "${ROOT}"
@@ -140,12 +161,19 @@ codesign -d --entitlements :- "${APP_PATH}" 2>/dev/null | grep -q "com.apple.sec
 codesign -d --entitlements :- "${APP_PATH}" 2>/dev/null | grep -q "com.apple.security.files.downloads.read-write"
 codesign -d --entitlements :- "${APP_PATH}/Contents/PlugIns/FinderXFinderExtension.appex" 2>/dev/null | grep -q "com.apple.security.app-sandbox"
 
+log "Installing debug app into Applications"
+rm -rf "${INSTALLED_APP_PATH}"
+ditto "${APP_PATH}" "${INSTALLED_APP_PATH}"
+
 log "Refreshing Launch Services and Finder Services"
 refresh_services
 
 log "Registering and enabling Finder Sync Extension"
-pluginkit -a "${APP_PATH}"
+pluginkit -a "${INSTALLED_APP_PATH}"
 pluginkit -e use -i "${EXTENSION_ID}"
+
+log "Removing local app products"
+remove_local_app_products
 
 if [[ "${RESTART_FINDER}" == "1" ]]; then
   log "Restarting Finder"
@@ -158,7 +186,7 @@ pluginkit -m -p com.apple.FinderSync -v | grep "${EXTENSION_ID}"
 cat <<INFO
 
 FinderX debug app is installed for Finder acceptance.
-app=${APP_PATH}
+app=${INSTALLED_APP_PATH}
 extension=${EXTENSION_ID}
 test_derived_data=${TEST_DERIVED_DATA}
 app_derived_data=${APP_DERIVED_DATA}

@@ -29,6 +29,14 @@ def add_sources(project, target, group_name, paths)
   end
 end
 
+def add_resources(project, target, group_name, paths)
+  group = project.main_group[group_name] || project.main_group.new_group(group_name)
+  paths.each do |path|
+    file = group.find_file_by_path(path) || group.new_file(path)
+    target.resources_build_phase.add_file_reference(file)
+  end
+end
+
 def link_framework(target, framework_target)
   target.add_dependency(framework_target)
   target.frameworks_build_phase.add_file_reference(framework_target.product_reference)
@@ -62,6 +70,7 @@ end
 app = project.new_target(:application, "FinderX", :osx, "14.0")
 configure_common(app, "dev.finderx.FinderX")
 add_sources(project, app, "Sources", ["Sources/FinderXApp/FinderXApp.swift"])
+add_resources(project, app, "FinderX", ["FinderX/Resources/Assets.xcassets"])
 link_framework(app, core)
 link_framework(app, linking)
 embed_framework(app, core)

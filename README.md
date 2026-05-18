@@ -34,6 +34,21 @@ WebP output requires Homebrew `webp` on the development machine:
 brew install webp
 ```
 
+Build a shareable DMG installer:
+
+```sh
+scripts/build_installer.sh
+```
+
+The default output is an ad-hoc signed internal-sharing DMG under `dist/`.
+It builds for the current Mac architecture so the app matches the bundled
+Homebrew `cwebp` helper. For wider distribution, build with a Developer ID
+Application certificate and notarize the resulting DMG:
+
+```sh
+scripts/build_installer.sh --signing-identity "Developer ID Application: Your Team"
+```
+
 Build with local signing:
 
 ```sh

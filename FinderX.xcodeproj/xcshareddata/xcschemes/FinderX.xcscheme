@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C8855DB986F1777DBF615269"
+               BlueprintIdentifier = "CE91042F7818CFC6DD28EDD0"
                BuildableName = "FinderX.app"
                BlueprintName = "FinderX"
                ReferencedContainer = "container:FinderX.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3AA23F9F8C9962FA1EF6EA7A"
+               BlueprintIdentifier = "66CC693F87B84E7CF7D93D6F"
                BuildableName = "FinderXFinderExtension.appex"
                BlueprintName = "FinderXFinderExtension"
                ReferencedContainer = "container:FinderX.xcodeproj">
@@ -42,7 +42,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FFDB9612F9A04C46B0D98AF7"
+               BlueprintIdentifier = "DC316A4C50172A83F9BC318A"
                BuildableName = "FinderXCompressCLI"
                BlueprintName = "FinderXCompressCLI"
                ReferencedContainer = "container:FinderX.xcodeproj">
@@ -58,7 +58,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C8855DB986F1777DBF615269"
+            BlueprintIdentifier = "CE91042F7818CFC6DD28EDD0"
             BuildableName = "FinderX.app"
             BlueprintName = "FinderX"
             ReferencedContainer = "container:FinderX.xcodeproj">
@@ -69,7 +69,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7E84AD8600A0398FBECFC4AB"
+               BlueprintIdentifier = "58BDC0C806EA1DC74C164383"
                BuildableName = "ImageCompressionCoreTests.xctest"
                BlueprintName = "ImageCompressionCoreTests"
                ReferencedContainer = "container:FinderX.xcodeproj">
@@ -79,7 +79,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7531CEB67B9FB24C8C0AD9B9"
+               BlueprintIdentifier = "45212E9689DCCCE6033F57CC"
                BuildableName = "FinderXLinkingTests.xctest"
                BlueprintName = "FinderXLinkingTests"
                ReferencedContainer = "container:FinderX.xcodeproj">
@@ -101,7 +101,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C8855DB986F1777DBF615269"
+            BlueprintIdentifier = "CE91042F7818CFC6DD28EDD0"
             BuildableName = "FinderX.app"
             BlueprintName = "FinderX"
             ReferencedContainer = "container:FinderX.xcodeproj">
@@ -118,7 +118,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C8855DB986F1777DBF615269"
+            BlueprintIdentifier = "CE91042F7818CFC6DD28EDD0"
             BuildableName = "FinderX.app"
             BlueprintName = "FinderX"
             ReferencedContainer = "container:FinderX.xcodeproj">
