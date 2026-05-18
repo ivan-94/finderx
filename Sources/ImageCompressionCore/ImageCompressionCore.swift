@@ -267,13 +267,15 @@ public final class ImageInspector {
 
 public final class OutputNamer {
     private let fileManager: FileManager
+    private let baseDirectory: URL?
 
-    public init(fileManager: FileManager = .default) {
+    public init(fileManager: FileManager = .default, baseDirectory: URL? = nil) {
         self.fileManager = fileManager
+        self.baseDirectory = baseDirectory
     }
 
     public func outputURL(for sourceURL: URL, format: ImageFormat) -> URL {
-        let directory = sourceURL.deletingLastPathComponent()
+        let directory = baseDirectory ?? sourceURL.deletingLastPathComponent()
         let baseName = sourceURL.deletingPathExtension().lastPathComponent + "-compressed"
         var candidate = directory
             .appendingPathComponent(baseName)
@@ -315,6 +317,16 @@ public final class ImageCompressor {
     }
 
     public func compress(_ sourceURL: URL, options: CompressionOptions = CompressionOptions()) throws -> CompressionResult {
+        try compress(sourceURL, options: options) { [namer] sourceURL, format in
+            namer.outputURL(for: sourceURL, format: format)
+        }
+    }
+
+    private func compress(
+        _ sourceURL: URL,
+        options: CompressionOptions,
+        outputURL: (URL, ImageFormat) -> URL
+    ) throws -> CompressionResult {
         let info = try inspector.inspect(sourceURL)
         guard let source = CGImageSourceCreateWithURL(sourceURL as CFURL, nil),
               let image = CGImageSourceCreateImageAtIndex(source, 0, nil)
@@ -341,7 +353,7 @@ public final class ImageCompressor {
             throw FinderXError.noViableOutput(sourceURL)
         }
 
-        let outputURL = namer.outputURL(for: sourceURL, format: best.format)
+        let outputURL = outputURL(sourceURL, best.format)
         do {
             try best.data.write(to: outputURL, options: .atomic)
         } catch {
@@ -380,6 +392,33 @@ public final class ImageCompressor {
         }
 
         return BatchCompressionReport(results: results, skipped: skipped, failures: failures)
+    }
+
+    public func compressInPlace(_ sourceURL: URL, options: CompressionOptions = CompressionOptions()) throws -> InplaceCompressionSession {
+        let tempID = UUID().uuidString
+        let tempDir = fileManager.temporaryDirectory
+            .appendingPathComponent("finderx-inplace-\(tempID)", isDirectory: true)
+        try fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
+
+        let result: CompressionResult
+        do {
+            result = try compress(sourceURL, options: options) { _, format in
+                tempDir
+                    .appendingPathComponent("finderx-inplace-\(tempID)")
+                    .appendingPathExtension(format.pathExtension)
+            }
+        } catch {
+            try? fileManager.removeItem(at: tempDir)
+            throw error
+        }
+
+        return InplaceCompressionSession(
+            sourceURL: sourceURL,
+            tempURL: result.outputURL,
+            result: result,
+            tempDirectory: tempDir,
+            fileManager: fileManager
+        )
     }
 
     private func candidateFormats(for info: ImageInfo, options: CompressionOptions) -> [ImageFormat] {
@@ -457,6 +496,85 @@ public final class ImageCompressor {
             throw FinderXError.imageDecodeFailed(URL(fileURLWithPath: ""))
         }
         return resized
+    }
+}
+
+public final class InplaceCompressionSession: @unchecked Sendable {
+    public let sourceURL: URL
+    public let tempURL: URL
+    public let result: CompressionResult
+    public let targetURL: URL
+
+    private let tempDirectory: URL
+    private let fileManager: FileManager
+    private var committed = false
+
+    public init(
+        sourceURL: URL,
+        tempURL: URL,
+        result: CompressionResult,
+        tempDirectory: URL,
+        fileManager: FileManager = .default
+    ) {
+        self.sourceURL = sourceURL
+        self.tempURL = tempURL
+        self.result = result
+        self.tempDirectory = tempDirectory
+        self.fileManager = fileManager
+        self.targetURL = sourceURL.deletingPathExtension()
+            .appendingPathExtension(tempURL.pathExtension)
+    }
+
+    public func commit() throws {
+        guard !committed else { return }
+
+        if targetURL != sourceURL, fileManager.fileExists(atPath: targetURL.path) {
+            throw FinderXError.outputWriteFailed(targetURL)
+        }
+
+        if targetURL == sourceURL {
+            _ = try fileManager.replaceItem(at: sourceURL, withItemAt: tempURL, backupItemName: nil, options: [], resultingItemURL: nil)
+            try? fileManager.removeItem(at: tempDirectory)
+            committed = true
+            return
+        }
+
+        let backupName = "\(sourceURL.lastPathComponent).finderx-backup"
+        let backupURL = sourceURL.deletingLastPathComponent().appendingPathComponent(backupName)
+        var replacedURL: NSURL?
+        _ = try fileManager.replaceItem(
+            at: sourceURL,
+            withItemAt: tempURL,
+            backupItemName: backupName,
+            options: [],
+            resultingItemURL: &replacedURL
+        )
+
+        let currentURL = (replacedURL as URL?) ?? sourceURL
+        do {
+            try fileManager.moveItem(at: currentURL, to: targetURL)
+            try? fileManager.removeItem(at: backupURL)
+            try? fileManager.removeItem(at: tempDirectory)
+        } catch {
+            if fileManager.fileExists(atPath: currentURL.path) {
+                try? fileManager.removeItem(at: currentURL)
+            }
+            if fileManager.fileExists(atPath: backupURL.path) {
+                try? fileManager.moveItem(at: backupURL, to: sourceURL)
+            }
+            throw error
+        }
+        committed = true
+    }
+
+    public func discard() {
+        guard !committed else { return }
+        try? fileManager.removeItem(at: tempDirectory)
+        committed = true
+    }
+
+    deinit {
+        discard()
     }
 }
 

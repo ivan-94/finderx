@@ -224,6 +224,7 @@ private extension NSWindow {
 @MainActor
 final class CompressionRouter: ObservableObject {
     @Published var selectedURLs: [URL] = []
+    @Published var replaceSuccessMessage: String?
     private let logger = Logger(subsystem: "dev.finderx.FinderX", category: "URLRouter")
     private var securityScopedURLs: [URL] = []
 
@@ -251,6 +252,12 @@ final class CompressionRouter: ObservableObject {
     func openCompression(_ urls: [URL]) {
         select(urls)
         AppPresentation.show()
+    }
+
+    func replaceSelectedURL(_ oldURL: URL, with newURL: URL, message: String) {
+        replaceSuccessMessage = message
+        let updated = selectedURLs.map { $0 == oldURL ? newURL : $0 }
+        select(updated)
     }
 
     func pickImages() {
@@ -284,18 +291,40 @@ struct CompressionRootView: View {
             if router.selectedURLs.isEmpty {
                 EmptyStateView()
             } else if router.selectedURLs.count == 1 {
-                CompressionView(urls: router.selectedURLs)
+                CompressionView(urls: router.selectedURLs) { oldURL, newURL, message in
+                    router.replaceSelectedURL(oldURL, with: newURL, message: message)
+                }
                     .id(router.selectedURLs)
             } else {
                 NavigationSplitView {
                     Sidebar(urls: router.selectedURLs)
                         .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 260)
                 } detail: {
-                    CompressionView(urls: router.selectedURLs)
+                    CompressionView(urls: router.selectedURLs) { oldURL, newURL, message in
+                        router.replaceSelectedURL(oldURL, with: newURL, message: message)
+                    }
                         .id(router.selectedURLs)
                 }
             }
         }
+        .alert("Replaced", isPresented: replaceSuccessBinding) {
+            Button("OK", role: .cancel) {
+                router.replaceSuccessMessage = nil
+            }
+        } message: {
+            Text(router.replaceSuccessMessage ?? "")
+        }
+    }
+
+    private var replaceSuccessBinding: Binding<Bool> {
+        Binding(
+            get: { router.replaceSuccessMessage != nil },
+            set: { isPresented in
+                if !isPresented {
+                    router.replaceSuccessMessage = nil
+                }
+            }
+        )
     }
 }
 
@@ -344,8 +373,11 @@ private struct EmptyStateView: View {
 private struct CompressionView: View {
     @StateObject private var model: CompressionViewModel
 
-    init(urls: [URL]) {
-        _model = StateObject(wrappedValue: CompressionViewModel(urls: urls))
+    init(urls: [URL], onCommittedReplacement: @escaping (URL, URL, String) -> Void) {
+        _model = StateObject(wrappedValue: CompressionViewModel(
+            urls: urls,
+            onCommittedReplacement: onCommittedReplacement
+        ))
     }
 
     var body: some View {
@@ -403,7 +435,11 @@ private struct CompressionHeader: View {
             }
 
             Button {
-                Task { await model.compress() }
+                if model.overwriteOriginal {
+                    Task { await model.compressInPlace() }
+                } else {
+                    Task { await model.compress() }
+                }
             } label: {
                 Label("Compress", systemImage: "arrow.down.circle")
             }
@@ -433,17 +469,23 @@ private struct CompressionHeader: View {
 
 @MainActor
 final class CompressionViewModel: ObservableObject {
-    let urls: [URL]
+    @Published var urls: [URL]
     @Published var infos: [ImageInfo] = []
     @Published var outputFormat = OutputFormat.automatic
     @Published var compressionMode = CompressionMode.balanced
     @Published var quality = 0.8
     @Published var resizePreset = ResizePreset.original
     @Published var keepMetadata = false
+    @Published var overwriteOriginal = false
     @Published var results: [CompressionResult] = []
     @Published var skipped: [(URL, String)] = []
     @Published var failures: [(URL, String)] = []
     @Published var isWorking = false
+    @Published var inplaceError: String? = nil
+    @Published var tempResult: CompressionResult? = nil
+
+    private var inplaceSession: InplaceCompressionSession? = nil
+    private let onCommittedReplacement: (URL, URL, String) -> Void
 
     let availableOutputFormats: [OutputFormat] = OutputFormat.allCases.filter { format in
         guard let concrete = format.concreteFormat else { return true }
@@ -459,8 +501,13 @@ final class CompressionViewModel: ObservableObject {
     private let inspector = ImageInspector()
     private let compressor = ImageCompressor()
 
-    init(urls: [URL]) {
+    init(urls: [URL], onCommittedReplacement: @escaping (URL, URL, String) -> Void) {
         self.urls = urls
+        self.onCommittedReplacement = onCommittedReplacement
+    }
+
+    deinit {
+        inplaceSession?.discard()
     }
 
     func inspect() async {
@@ -484,9 +531,11 @@ final class CompressionViewModel: ObservableObject {
         isWorking = true
         defer { isWorking = false }
 
+        discardInPlace()
         results = []
         failures = []
         skipped = []
+        inplaceError = nil
 
         let options = currentOptions()
         logger.notice(
@@ -508,6 +557,76 @@ final class CompressionViewModel: ObservableObject {
         }
     }
 
+    func compressInPlace() async {
+        guard urls.count == 1, let url = urls.first else { return }
+        isWorking = true
+        defer { isWorking = false }
+
+        discardInPlace()
+        results = []
+        failures = []
+        skipped = []
+
+        let options = currentOptions()
+        logger.notice(
+            "compressInPlace start url=\(url.lastPathComponent, privacy: .public) format=\(options.outputFormat.displayName, privacy: .public)"
+        )
+
+        do {
+            let session = try compressor.compressInPlace(url, options: options)
+            inplaceSession = session
+            tempResult = session.result
+            logger.notice(
+                "compressInPlace ready temp=\(session.tempURL.lastPathComponent, privacy: .public) saved=\(session.result.savedFraction, privacy: .public)"
+            )
+        } catch {
+            inplaceError = error.localizedDescription
+            logger.error("compressInPlace failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func commitInPlace() async {
+        guard let session = inplaceSession else { return }
+        isWorking = true
+        defer { isWorking = false }
+        inplaceError = nil
+
+        do {
+            try session.commit()
+            let oldURL = session.sourceURL
+            let newURL = session.targetURL
+            let savedPercent = Int(session.result.savedFraction * 100)
+            let message = "\(newURL.lastPathComponent) replaced. Saved \(savedPercent)% (\(ByteCount.string(session.result.originalSize)) → \(ByteCount.string(session.result.compressedSize)))."
+
+            // Update selected URL to the new target (extension may have changed)
+            if let index = urls.firstIndex(where: { $0 == oldURL }) {
+                urls[index] = newURL
+            }
+            onCommittedReplacement(oldURL, newURL, message)
+
+            // Clear inplace state
+            tempResult = nil
+            inplaceSession = nil
+
+            // Re-inspect the replaced file
+            await inspect()
+
+            logger.notice(
+                "commitInPlace success target=\(newURL.lastPathComponent, privacy: .public)"
+            )
+        } catch {
+            inplaceError = error.localizedDescription
+            logger.error("commitInPlace failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func discardInPlace() {
+        inplaceSession?.discard()
+        inplaceSession = nil
+        tempResult = nil
+        inplaceError = nil
+    }
+
     private func currentOptions() -> CompressionOptions {
         CompressionOptions(
             outputFormat: outputFormat,
@@ -519,6 +638,9 @@ final class CompressionViewModel: ObservableObject {
     }
 
     var singleIssueMessage: String? {
+        if let error = inplaceError {
+            return error
+        }
         if let failure = failures.first {
             return failure.1
         }
@@ -553,7 +675,9 @@ private struct SingleImageView: View {
                 infoStrip
                 Divider()
 
-                if let result {
+                if let tempResult = model.tempResult, model.overwriteOriginal {
+                    ImageComparisonView(originalURL: info.url, compressedURL: tempResult.outputURL, mode: mode)
+                } else if let result {
                     ImageComparisonView(originalURL: info.url, compressedURL: result.outputURL, mode: mode)
                 } else {
                     ZStack(alignment: .bottomLeading) {
@@ -569,9 +693,15 @@ private struct SingleImageView: View {
 
             Divider()
 
-            CompressionInspector(model: model, info: info, result: result, comparisonMode: $mode)
-                .frame(width: 286)
-                .background(Color(nsColor: .controlBackgroundColor))
+            if let tempResult = model.tempResult, model.overwriteOriginal {
+                InplaceActionPanel(model: model, info: info, tempResult: tempResult)
+                    .frame(width: 286)
+                    .background(Color(nsColor: .controlBackgroundColor))
+            } else {
+                CompressionInspector(model: model, info: info, result: result, comparisonMode: $mode)
+                    .frame(width: 286)
+                    .background(Color(nsColor: .controlBackgroundColor))
+            }
         }
     }
 
@@ -650,6 +780,15 @@ private struct CompressionInspector: View {
                     }
 
                     Toggle("Keep metadata", isOn: $model.keepMetadata)
+
+                    if model.urls.count == 1 {
+                        Toggle("Overwrite original", isOn: $model.overwriteOriginal)
+                            .onChange(of: model.overwriteOriginal) { _, enabled in
+                                if !enabled {
+                                    model.discardInPlace()
+                                }
+                            }
+                    }
                 }
 
                 inspectorSection("Image") {
@@ -706,6 +845,64 @@ private struct CompressionInspector: View {
                 .font(.callout)
             content()
                 .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func detailRow(_ title: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.callout)
+                .lineLimit(2)
+                .textSelection(.enabled)
+        }
+    }
+}
+
+private struct InplaceActionPanel: View {
+    @ObservedObject var model: CompressionViewModel
+    let info: ImageInfo
+    let tempResult: CompressionResult
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Confirm Replacement")
+                    .font(.headline)
+
+                VStack(alignment: .leading, spacing: 12) {
+                    detailRow("Original", "\(info.url.lastPathComponent) — \(ByteCount.string(info.fileSize))")
+                    detailRow("Compressed", "\(tempResult.outputURL.lastPathComponent) — \(ByteCount.string(tempResult.compressedSize))")
+                    detailRow("Savings", "\(Int(tempResult.savedFraction * 100))% (\(ByteCount.string(tempResult.savedBytes)))")
+                }
+
+                VStack(spacing: 10) {
+                    Button {
+                        Task { await model.commitInPlace() }
+                    } label: {
+                        Label("Replace Original", systemImage: "checkmark.circle.fill")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .disabled(model.isWorking)
+
+                    Button {
+                        model.discardInPlace()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark.circle")
+                    }
+                    .controlSize(.large)
+                    .disabled(model.isWorking)
+                }
+                .frame(maxWidth: .infinity)
+
+                if let error = model.inplaceError {
+                    IssueBanner(message: error)
+                }
+            }
+            .padding(16)
         }
     }
 

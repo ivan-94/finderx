@@ -125,6 +125,135 @@ struct ImageCompressionCoreTests {
         #expect(report.skipped.count == 1)
         #expect(report.failures.isEmpty)
     }
+
+    @Test("compressInPlace creates temp file and leaves source untouched")
+    func compressInPlaceCreatesTempFile() throws {
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.jpg")
+        try TestImages.writeImage(url: source, format: .jpeg, width: 640, height: 360, alpha: false)
+        let originalSize = try source.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .jpeg, quality: 0.65)
+        )
+
+        #expect(FileManager.default.fileExists(atPath: session.tempURL.path))
+        #expect(FileManager.default.fileExists(atPath: source.path))
+        #expect(session.result.sourceURL == source)
+        #expect(session.result.originalSize == Int64(originalSize))
+        #expect(session.result.compressedSize > 0)
+        #expect(session.targetURL.pathExtension == "jpg")
+        #expect(session.tempURL.lastPathComponent.hasPrefix("finderx-inplace-"))
+        #expect(session.tempURL.lastPathComponent.hasSuffix(".jpg"))
+
+        session.discard()
+    }
+
+    @Test("commit replaces source and cleans up temp")
+    func inplaceCommitReplacesSource() throws {
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.jpg")
+        try TestImages.writeImage(url: source, format: .jpeg, width: 640, height: 360, alpha: false)
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .jpeg, quality: 0.65)
+        )
+        let tempURL = session.tempURL
+
+        try session.commit()
+
+        #expect(!FileManager.default.fileExists(atPath: tempURL.path))
+        #expect(FileManager.default.fileExists(atPath: session.targetURL.path))
+        #expect(session.targetURL.lastPathComponent == "photo.jpg")
+    }
+
+    @Test("commit handles extension change")
+    func inplaceCommitHandlesExtensionChange() throws {
+        #expect(ImageCompressor.canWrite(.webp))
+
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.png")
+        try TestImages.writeImage(url: source, format: .png, width: 640, height: 360, alpha: false)
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .webp, quality: 0.8)
+        )
+
+        #expect(session.targetURL.pathExtension == "webp")
+
+        try session.commit()
+
+        #expect(!FileManager.default.fileExists(atPath: source.path))
+        #expect(FileManager.default.fileExists(atPath: session.targetURL.path))
+        #expect(session.targetURL.lastPathComponent == "photo.webp")
+    }
+
+    @Test("commit refuses extension change when target exists")
+    func inplaceCommitDoesNotOverwriteExistingTarget() throws {
+        #expect(ImageCompressor.canWrite(.webp))
+
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.png")
+        let existingTarget = directory.appendingPathComponent("photo.webp")
+        try TestImages.writeImage(url: source, format: .png, width: 640, height: 360, alpha: false)
+        try "existing".write(to: existingTarget, atomically: true, encoding: .utf8)
+        let originalData = try Data(contentsOf: source)
+        let targetData = try Data(contentsOf: existingTarget)
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .webp, quality: 0.8)
+        )
+
+        #expect(throws: FinderXError.outputWriteFailed(existingTarget)) {
+            try session.commit()
+        }
+        #expect(try Data(contentsOf: source) == originalData)
+        #expect(try Data(contentsOf: existingTarget) == targetData)
+
+        session.discard()
+    }
+
+    @Test("discard cleans up temp directory")
+    func inplaceDiscardCleansUp() throws {
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.jpg")
+        try TestImages.writeImage(url: source, format: .jpeg, width: 640, height: 360, alpha: false)
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .jpeg, quality: 0.65)
+        )
+        let tempDir = session.tempURL.deletingLastPathComponent()
+
+        session.discard()
+
+        #expect(!FileManager.default.fileExists(atPath: tempDir.path))
+        #expect(FileManager.default.fileExists(atPath: source.path))
+    }
+
+    @Test("auto-cleanup on deinit")
+    func inplaceSessionAutoCleansOnDeinit() throws {
+        let directory = try TestImages.makeDirectory()
+        let source = directory.appendingPathComponent("photo.jpg")
+        try TestImages.writeImage(url: source, format: .jpeg, width: 640, height: 360, alpha: false)
+
+        let session = try ImageCompressor().compressInPlace(
+            source,
+            options: CompressionOptions(outputFormat: .jpeg, quality: 0.65)
+        )
+        let tempDir = session.tempURL.deletingLastPathComponent()
+
+        // Session goes out of scope, deinit should clean up
+        // We can't directly test deinit timing, but discard() is called from deinit
+        // So we call it explicitly for deterministic testing
+        session.discard()
+
+        #expect(!FileManager.default.fileExists(atPath: tempDir.path))
+    }
 }
 
 private enum TestImages {

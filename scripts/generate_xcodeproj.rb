@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "xcodeproj"
+require "fileutils"
 
 PROJECT_PATH = "FinderX.xcodeproj"
 
