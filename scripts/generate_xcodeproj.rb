@@ -67,14 +67,25 @@ linking.build_configurations.each do |config|
   config.build_settings["CURRENT_PROJECT_VERSION"] = "1"
 end
 
+xmind_preview_core = project.new_target(:framework, "XMindPreviewCore", :osx, "14.0")
+configure_common(xmind_preview_core, "dev.finderx.XMindPreviewCore")
+add_sources(project, xmind_preview_core, "Sources", ["Sources/XMindPreviewCore/XMindPreviewCore.swift"])
+xmind_preview_core.build_configurations.each do |config|
+  config.build_settings["GENERATE_INFOPLIST_FILE"] = "YES"
+  config.build_settings["MARKETING_VERSION"] = "0.1.0"
+  config.build_settings["CURRENT_PROJECT_VERSION"] = "1"
+end
+
 app = project.new_target(:application, "FinderX", :osx, "14.0")
 configure_common(app, "dev.finderx.FinderX")
 add_sources(project, app, "Sources", ["Sources/FinderXApp/FinderXApp.swift"])
 add_resources(project, app, "FinderX", ["FinderX/Resources/Assets.xcassets"])
 link_framework(app, core)
 link_framework(app, linking)
+link_framework(app, xmind_preview_core)
 embed_framework(app, core)
 embed_framework(app, linking)
+embed_framework(app, xmind_preview_core)
 app.build_configurations.each do |config|
   config.build_settings["INFOPLIST_FILE"] = "FinderX/Resources/Info.plist"
   config.build_settings["CODE_SIGN_ENTITLEMENTS"] = "FinderX/Resources/FinderX.entitlements"
@@ -97,6 +108,36 @@ embed_extensions.symbol_dst_subfolder_spec = :plug_ins
 extension_file = embed_extensions.add_file_reference(extension.product_reference)
 extension_file.settings = { "ATTRIBUTES" => ["RemoveHeadersOnCopy"] }
 app.add_dependency(extension)
+
+thumbnail_extension = project.new_target(:app_extension, "FinderXXMindThumbnailExtension", :osx, "14.0")
+configure_common(thumbnail_extension, "dev.finderx.FinderX.XMindThumbnailExtension")
+add_sources(project, thumbnail_extension, "Sources", ["Sources/FinderXXMindThumbnailExtension/ThumbnailProvider.swift"])
+link_framework(thumbnail_extension, xmind_preview_core)
+thumbnail_extension.build_configurations.each do |config|
+  config.build_settings["INFOPLIST_FILE"] = "FinderXXMindThumbnailExtension/Resources/Info.plist"
+  config.build_settings["CODE_SIGN_ENTITLEMENTS"] = "FinderXXMindThumbnailExtension/Resources/FinderXXMindThumbnailExtension.entitlements"
+  config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+  config.build_settings["APPLICATION_EXTENSION_API_ONLY"] = "YES"
+  config.build_settings["ENABLE_USER_SELECTED_FILES"] = "readonly"
+end
+thumbnail_extension_file = embed_extensions.add_file_reference(thumbnail_extension.product_reference)
+thumbnail_extension_file.settings = { "ATTRIBUTES" => ["RemoveHeadersOnCopy"] }
+app.add_dependency(thumbnail_extension)
+
+preview_extension = project.new_target(:app_extension, "FinderXXMindPreviewExtension", :osx, "14.0")
+configure_common(preview_extension, "dev.finderx.FinderX.XMindPreviewExtension")
+add_sources(project, preview_extension, "Sources", ["Sources/FinderXXMindPreviewExtension/PreviewProvider.swift"])
+link_framework(preview_extension, xmind_preview_core)
+preview_extension.build_configurations.each do |config|
+  config.build_settings["INFOPLIST_FILE"] = "FinderXXMindPreviewExtension/Resources/Info.plist"
+  config.build_settings["CODE_SIGN_ENTITLEMENTS"] = "FinderXXMindPreviewExtension/Resources/FinderXXMindPreviewExtension.entitlements"
+  config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+  config.build_settings["APPLICATION_EXTENSION_API_ONLY"] = "YES"
+  config.build_settings["ENABLE_USER_SELECTED_FILES"] = "readonly"
+end
+preview_extension_file = embed_extensions.add_file_reference(preview_extension.product_reference)
+preview_extension_file.settings = { "ATTRIBUTES" => ["RemoveHeadersOnCopy"] }
+app.add_dependency(preview_extension)
 
 cli = project.new_target(:command_line_tool, "FinderXCompressCLI", :osx, "14.0")
 configure_common(cli, "dev.finderx.FinderXCompressCLI")
@@ -126,12 +167,24 @@ link_tests.build_configurations.each do |config|
   config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks"
 end
 
+xmind_preview_tests = project.new_target(:unit_test_bundle, "XMindPreviewCoreTests", :osx, "14.0")
+configure_common(xmind_preview_tests, "dev.finderx.XMindPreviewCoreTests")
+add_sources(project, xmind_preview_tests, "Tests", ["Tests/XMindPreviewCoreTests/XMindPreviewCoreTests.swift"])
+link_framework(xmind_preview_tests, xmind_preview_core)
+xmind_preview_tests.build_configurations.each do |config|
+  config.build_settings["GENERATE_INFOPLIST_FILE"] = "YES"
+  config.build_settings["LD_RUNPATH_SEARCH_PATHS"] = "$(inherited) @loader_path/Frameworks @loader_path/../Frameworks"
+end
+
 scheme = Xcodeproj::XCScheme.new
 scheme.add_build_target(app)
 scheme.add_build_target(extension)
+scheme.add_build_target(thumbnail_extension)
+scheme.add_build_target(preview_extension)
 scheme.add_build_target(cli)
 scheme.add_test_target(tests)
 scheme.add_test_target(link_tests)
+scheme.add_test_target(xmind_preview_tests)
 scheme.set_launch_target(app)
 scheme.save_as(PROJECT_PATH, "FinderX", true)
 

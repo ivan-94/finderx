@@ -13,6 +13,8 @@ STAGING_APP_PATH="${ROOT}/.build/installer-staging/FinderX.app"
 INSTALLED_APP_PATH="/Applications/FinderX.app"
 APP_ENTITLEMENTS="${ROOT}/FinderX/Resources/FinderX.entitlements"
 EXTENSION_ID="dev.finderx.FinderX.FinderExtension"
+XMIND_THUMBNAIL_EXTENSION_ID="dev.finderx.FinderX.XMindThumbnailExtension"
+XMIND_PREVIEW_EXTENSION_ID="dev.finderx.FinderX.XMindPreviewExtension"
 LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister"
 PBS="/System/Library/CoreServices/pbs"
 
@@ -115,6 +117,8 @@ refresh_services() {
   "${LSREGISTER}" -f -R -trusted "${INSTALLED_APP_PATH}" >/dev/null 2>&1 || true
   "${PBS}" -flush >/dev/null 2>&1 || true
   "${PBS}" -update >/dev/null 2>&1 || true
+  qlmanage -r >/dev/null 2>&1 || true
+  qlmanage -r cache >/dev/null 2>&1 || true
 }
 
 remove_local_app_products() {
@@ -168,9 +172,11 @@ ditto "${APP_PATH}" "${INSTALLED_APP_PATH}"
 log "Refreshing Launch Services and Finder Services"
 refresh_services
 
-log "Registering and enabling Finder Sync Extension"
+log "Registering and enabling app extensions"
 pluginkit -a "${INSTALLED_APP_PATH}"
 pluginkit -e use -i "${EXTENSION_ID}"
+pluginkit -e use -i "${XMIND_THUMBNAIL_EXTENSION_ID}" || true
+pluginkit -e use -i "${XMIND_PREVIEW_EXTENSION_ID}" || true
 
 log "Removing local app products"
 remove_local_app_products
@@ -182,12 +188,16 @@ fi
 
 log "PluginKit status"
 pluginkit -m -p com.apple.FinderSync -v | grep "${EXTENSION_ID}"
+pluginkit -m -v | grep "${XMIND_THUMBNAIL_EXTENSION_ID}"
+pluginkit -m -v | grep "${XMIND_PREVIEW_EXTENSION_ID}"
 
 cat <<INFO
 
 FinderX debug app is installed for Finder acceptance.
 app=${INSTALLED_APP_PATH}
 extension=${EXTENSION_ID}
+xmind_thumbnail_extension=${XMIND_THUMBNAIL_EXTENSION_ID}
+xmind_preview_extension=${XMIND_PREVIEW_EXTENSION_ID}
 test_derived_data=${TEST_DERIVED_DATA}
 app_derived_data=${APP_DERIVED_DATA}
 INFO

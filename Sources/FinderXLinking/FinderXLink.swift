@@ -27,6 +27,14 @@ public enum FinderXLink {
         return components.url
     }
 
+    public static func makeCopyFinderXLinkURL(for fileURL: URL) -> URL? {
+        makeActionURL(host: "copy-link", fileURLs: [fileURL])
+    }
+
+    public static func makeCopyAbsolutePathURL(for fileURLs: [URL]) -> URL? {
+        makeActionURL(host: "copy-path", fileURLs: fileURLs)
+    }
+
     public static func resolveOpenURL(_ url: URL, iCloudRoot: URL? = defaultICloudDriveRoot()) -> URL? {
         guard url.scheme == "finderx", url.host == "open" else { return nil }
 
@@ -87,5 +95,30 @@ public enum FinderXLink {
             return URL(fileURLWithPath: String(cString: homePath), isDirectory: true)
         }
         return FileManager.default.homeDirectoryForCurrentUser
+    }
+
+    private static func makeActionURL(host: String, fileURLs: [URL]) -> URL? {
+        guard !fileURLs.isEmpty else { return nil }
+        var components = URLComponents()
+        components.scheme = "finderx"
+        components.host = host
+        components.queryItems = fileURLs.map { URLQueryItem(name: "file", value: $0.path) }
+        return components.url
+    }
+}
+
+public enum FinderXPathFormatter {
+    public static func absolutePathsText(for urls: [URL]) -> String? {
+        let paths = uniqueFileURLs(urls).map(\.path)
+        guard !paths.isEmpty else { return nil }
+        return paths.joined(separator: "\n")
+    }
+
+    private static func uniqueFileURLs(_ urls: [URL]) -> [URL] {
+        var seen = Set<String>()
+        return urls.filter { url in
+            guard url.isFileURL else { return false }
+            return seen.insert(url.standardizedFileURL.path).inserted
+        }
     }
 }

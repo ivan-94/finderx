@@ -79,6 +79,18 @@ The debug install flow should:
 
 Use `scripts/install_debug_app.sh --skip-tests` after tests have already passed.
 
+## Do not use LSUIElement for the app service host
+
+FinderX should behave like an accessory utility, but the main app still needs to receive Finder Services. If the app declares `LSUIElement` in `FinderX/Resources/Info.plist`, macOS can still show the Services menu items while silently failing to dispatch them to `FinderXServicesProvider`.
+
+Keep the app out of the Dock at runtime instead:
+
+```swift
+NSApp.setActivationPolicy(.accessory)
+```
+
+This lets Finder Services launch and call the app, after which FinderX can hide implicit windows for copy-only actions or explicitly show the compression window.
+
 ## Verify installed entitlements, not just source plist
 
 `FinderX/Resources/FinderX.entitlements` can be correct while the installed app is still old or signed without the entitlement.

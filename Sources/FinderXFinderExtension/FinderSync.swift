@@ -30,7 +30,7 @@ final class FinderSync: FIFinderSync {
             return nil
         }
 
-        guard !imageURLs.isEmpty || linkURL != nil else {
+        guard !imageURLs.isEmpty || linkURL != nil || !actionURLs.isEmpty else {
             logger.notice("menu ignored: no eligible FinderX action")
             return nil
         }
@@ -49,6 +49,15 @@ final class FinderSync: FIFinderSync {
             let item = NSMenuItem(
                 title: "Copy FinderX Link",
                 action: #selector(copyFinderXLink),
+                keyEquivalent: ""
+            )
+            item.target = self
+            menu.addItem(item)
+        }
+        if !actionURLs.isEmpty {
+            let item = NSMenuItem(
+                title: "Copy Absolute Path",
+                action: #selector(copyAbsolutePath),
                 keyEquivalent: ""
             )
             item.target = self
@@ -74,16 +83,29 @@ final class FinderSync: FIFinderSync {
             return
         }
 
-        guard let url = FinderXLink.makeOpenURL(for: urls[0]) else {
-            logger.error("copy link failed: could not build URL for \(urls[0].path, privacy: .public)")
+        guard let url = FinderXLink.makeCopyFinderXLinkURL(for: urls[0]) else {
+            logger.error("copy link failed: could not build action URL for \(urls[0].path, privacy: .public)")
             return
         }
 
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(url.absoluteString, forType: .string)
-        pasteboard.setString(url.absoluteString, forType: .URL)
-        logger.notice("copy link succeeded for \(urls[0].path, privacy: .public)")
+        NSWorkspace.shared.open(url)
+        logger.notice("copy link requested for \(urls[0].path, privacy: .public)")
+    }
+
+    @objc private func copyAbsolutePath() {
+        let urls = Self.selectedItemURLsForAction()
+        guard !urls.isEmpty else {
+            logger.notice("copy absolute path ignored: no file URLs")
+            return
+        }
+
+        guard let url = FinderXLink.makeCopyAbsolutePathURL(for: urls) else {
+            logger.error("copy absolute path failed: could not build action URL")
+            return
+        }
+
+        NSWorkspace.shared.open(url)
+        logger.notice("copy absolute path requested count=\(urls.count, privacy: .public)")
     }
 
     private static func selectedImageURLs() -> [URL] {

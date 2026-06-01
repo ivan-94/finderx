@@ -14,6 +14,21 @@
 	<string>FinderX</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>XMind Workbook</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.xmind.openformat.xmind</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.0</string>
 	<key>CFBundleURLTypes</key>
@@ -33,8 +48,6 @@
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
-	<key>LSUIElement</key>
-	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 	<key>NSPrincipalClass</key>
@@ -49,6 +62,11 @@
 			</dict>
 			<key>NSMessage</key>
 			<string>compressWithFinderXService</string>
+			<key>NSKeyEquivalent</key>
+			<dict>
+				<key>default</key>
+				<string>X</string>
+			</dict>
 			<key>NSPortName</key>
 			<string>FinderX</string>
 			<key>NSRequiredContext</key>
@@ -71,6 +89,11 @@
 			</dict>
 			<key>NSMessage</key>
 			<string>copyFinderXLinkService</string>
+			<key>NSKeyEquivalent</key>
+			<dict>
+				<key>default</key>
+				<string>J</string>
+			</dict>
 			<key>NSPortName</key>
 			<string>FinderX</string>
 			<key>NSRequiredContext</key>
@@ -88,6 +111,54 @@
 				<string>NSURLPboardType</string>
 				<string>NSFilenamesPboardType</string>
 			</array>
+		</dict>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Copy Absolute Path</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>copyAbsolutePathService</string>
+			<key>NSPortName</key>
+			<string>FinderX</string>
+			<key>NSRequiredContext</key>
+			<dict>
+				<key>NSApplicationIdentifier</key>
+				<string>com.apple.finder</string>
+			</dict>
+			<key>NSSendTypes</key>
+			<array>
+				<string>public.file-url</string>
+				<string>NSURLPboardType</string>
+				<string>NSFilenamesPboardType</string>
+			</array>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.zip-archive</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>XMind Workbook</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.xmind.openformat.xmind</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xmind</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/xmind</string>
+					<string>application/vnd.xmind.workbook</string>
+				</array>
+			</dict>
 		</dict>
 	</array>
 </dict>

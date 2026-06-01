@@ -112,6 +112,48 @@ struct FinderXLinkingTests {
         #expect(FinderXLink.makeCompressURL(for: []) == nil)
     }
 
+    @Test("Copy action links preserve selected file paths")
+    func copyActionLinks() throws {
+        let first = URL(fileURLWithPath: "/Users/ivan/Downloads/a file.pdf")
+        let second = URL(fileURLWithPath: "/Users/ivan/Library/Mobile Documents/com~apple~CloudDocs/b.jpg")
+
+        let copyLinkURL = try #require(FinderXLink.makeCopyFinderXLinkURL(for: first))
+        let copyPathURL = try #require(FinderXLink.makeCopyAbsolutePathURL(for: [first, second]))
+
+        #expect(copyLinkURL.scheme == "finderx")
+        #expect(copyLinkURL.host == "copy-link")
+        #expect(URLComponents(url: copyLinkURL, resolvingAgainstBaseURL: false)?.queryItems?.first?.value == first.path)
+
+        #expect(copyPathURL.scheme == "finderx")
+        #expect(copyPathURL.host == "copy-path")
+        let files = URLComponents(url: copyPathURL, resolvingAgainstBaseURL: false)?.queryItems?.filter { $0.name == "file" }.compactMap(\.value)
+        #expect(files == [first.path, second.path])
+        #expect(FinderXLink.makeCopyAbsolutePathURL(for: []) == nil)
+    }
+
+    @Test("Absolute path text preserves order and uses one path per line")
+    func absolutePathText() {
+        let first = URL(fileURLWithPath: "/Users/ivan/Library/Mobile Documents/com~apple~CloudDocs/a file.jpg")
+        let second = URL(fileURLWithPath: "/Users/ivan/Downloads/folder", isDirectory: true)
+
+        let text = FinderXPathFormatter.absolutePathsText(for: [first, second])
+
+        #expect(text == "/Users/ivan/Library/Mobile Documents/com~apple~CloudDocs/a file.jpg\n/Users/ivan/Downloads/folder")
+    }
+
+    @Test("Absolute path text ignores non-file URLs and de-duplicates standardized paths")
+    func absolutePathTextRejectsUnsupportedInputs() {
+        let folder = URL(fileURLWithPath: "/Users/ivan/Downloads/folder", isDirectory: true)
+        let duplicate = URL(fileURLWithPath: "/Users/ivan/Downloads/./folder", isDirectory: true)
+        let webURL = URL(string: "https://example.com/file.jpg")!
+
+        let text = FinderXPathFormatter.absolutePathsText(for: [webURL, folder, duplicate])
+
+        #expect(text == "/Users/ivan/Downloads/folder")
+        #expect(FinderXPathFormatter.absolutePathsText(for: [webURL]) == nil)
+        #expect(FinderXPathFormatter.absolutePathsText(for: []) == nil)
+    }
+
     private func makeDirectory() throws -> URL {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("finderx-linking-tests-\(UUID().uuidString)", isDirectory: true)

@@ -15,15 +15,26 @@ struct FinderXApp: App {
             CompressionRootView()
                 .environmentObject(router)
                 .frame(minWidth: 840, minHeight: 560)
+                .onAppear {
+                    AppPresentation.hideImplicitLaunchWindowIfNeeded()
+                    if let urls = FinderXServiceRequests.takePendingCompressionURLs() {
+                        router.openCompression(urls)
+                    }
+                    FinderXURLRequests.takePendingURLs().forEach(router.open)
+                }
                 .onOpenURL { url in
-                    router.open(url)
+                    FinderXURLRequests.requestOpen(url)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .finderXOpenURLRequested)) { notification in
+                    let urls = FinderXURLRequests.takePendingURLs()
+                    if urls.isEmpty, let url = notification.object as? URL {
+                        router.open(url)
+                    } else {
+                        urls.forEach(router.open)
+                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .finderXCompressURLsRequested)) { notification in
                     guard let urls = notification.object as? [URL] else { return }
-                    router.openCompression(urls)
-                }
-                .onAppear {
-                    guard let urls = FinderXServiceRequests.takePendingCompressionURLs() else { return }
                     router.openCompression(urls)
                 }
         }
@@ -43,6 +54,7 @@ struct FinderXApp: App {
     }
 }
 
+@MainActor
 final class FinderXAppDelegate: NSObject, NSApplicationDelegate {
     private var hideWorkItem: DispatchWorkItem?
     private let servicesProvider = FinderXServicesProvider()
@@ -73,6 +85,12 @@ final class FinderXAppDelegate: NSObject, NSApplicationDelegate {
         AppPresentation.show()
         return true
     }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        Task { @MainActor in
+            urls.forEach(FinderXURLRequests.requestOpen)
+        }
+    }
 }
 
 final class FinderXServicesProvider: NSObject {
@@ -94,6 +112,7 @@ final class FinderXServicesProvider: NSObject {
         let scopedURLs = imageURLs.filter { $0.startAccessingSecurityScopedResource() }
         Task { @MainActor in
             FinderXServiceRequests.requestCompression(imageURLs, scopedURLs: scopedURLs)
+            AppPresentation.show()
         }
         logger.notice("compress service opened image count=\(imageURLs.count, privacy: .public)")
     }
@@ -111,23 +130,49 @@ final class FinderXServicesProvider: NSObject {
             return
         }
 
-        guard isOrdinaryFile(urls[0]) else {
+        guard FinderXFilePredicates.isOrdinaryFile(urls[0]) else {
             error?.pointee = "Selected item is not a file." as NSString
             logger.notice("service ignored: selected item is not an ordinary file")
             return
         }
 
-        guard let link = FinderXLink.makeOpenURL(for: urls[0]) else {
+        guard FinderXClipboard.copyFinderXLink(for: urls[0]) != nil else {
             error?.pointee = "Could not create FinderX link." as NSString
             logger.error("service failed: could not build link for \(urls[0].path, privacy: .public)")
             return
         }
 
-        let general = NSPasteboard.general
-        general.clearContents()
-        general.setString(link.absoluteString, forType: .string)
-        general.setString(link.absoluteString, forType: .URL)
+        Task { @MainActor in
+            ToastPresenter.show("Copied FinderX link")
+            FinderFocusRestorer.restoreFinderAfterCopyToast()
+        }
         logger.notice("service copied link for \(urls[0].path, privacy: .public)")
+    }
+
+    @objc(copyAbsolutePathService:userData:error:)
+    func copyAbsolutePathService(
+        _ pasteboard: NSPasteboard,
+        userData: String?,
+        error: AutoreleasingUnsafeMutablePointer<NSString?>?
+    ) {
+        let urls = fileURLs(from: pasteboard)
+        guard let text = FinderXPathFormatter.absolutePathsText(for: urls) else {
+            error?.pointee = "Select one or more files." as NSString
+            logger.notice("copy absolute path ignored: no file URLs")
+            return
+        }
+
+        guard FinderXClipboard.copyAbsolutePaths(for: urls) != nil else {
+            error?.pointee = "Could not copy paths." as NSString
+            logger.notice("copy absolute path ignored: no file URLs after formatting")
+            return
+        }
+
+        Task { @MainActor in
+            ToastPresenter.show("Copied absolute path")
+            FinderFocusRestorer.restoreFinderAfterCopyToast()
+        }
+        logger.notice("service copied absolute path count=\(text.split(separator: "\n").count, privacy: .public)")
     }
 
     private func fileURLs(from pasteboard: NSPasteboard) -> [URL] {
@@ -162,7 +207,31 @@ final class FinderXServicesProvider: NSObject {
         return urls.filter { seen.insert($0).inserted }
     }
 
-    private func isOrdinaryFile(_ url: URL) -> Bool {
+}
+
+private enum FinderXClipboard {
+    static func copyFinderXLink(for url: URL) -> URL? {
+        guard let link = FinderXLink.makeOpenURL(for: url) else { return nil }
+
+        let general = NSPasteboard.general
+        general.clearContents()
+        general.setString(link.absoluteString, forType: .string)
+        general.setString(link.absoluteString, forType: .URL)
+        return link
+    }
+
+    static func copyAbsolutePaths(for urls: [URL]) -> String? {
+        guard let text = FinderXPathFormatter.absolutePathsText(for: urls) else { return nil }
+
+        let general = NSPasteboard.general
+        general.clearContents()
+        general.setString(text, forType: .string)
+        return text
+    }
+}
+
+private enum FinderXFilePredicates {
+    static func isOrdinaryFile(_ url: URL) -> Bool {
         guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey, .isPackageKey]) else {
             return false
         }
@@ -172,6 +241,7 @@ final class FinderXServicesProvider: NSObject {
 
 private extension Notification.Name {
     static let finderXCompressURLsRequested = Notification.Name("dev.finderx.compressURLsRequested")
+    static let finderXOpenURLRequested = Notification.Name("dev.finderx.openURLRequested")
 }
 
 @MainActor
@@ -197,19 +267,156 @@ private enum FinderXServiceRequests {
     }
 }
 
+@MainActor
+private enum FinderXURLRequests {
+    private static var pendingURLs: [URL] = []
+
+    static func requestOpen(_ url: URL) {
+        pendingURLs.append(url)
+        NotificationCenter.default.post(name: .finderXOpenURLRequested, object: url)
+    }
+
+    static func takePendingURLs() -> [URL] {
+        defer { pendingURLs = [] }
+        return pendingURLs
+    }
+}
+
+@MainActor
 private enum AppPresentation {
+    private static var explicitShowRequested = false
+
     static func show() {
-        DispatchQueue.main.async {
-            NSApp.setActivationPolicy(.accessory)
-            NSApp.unhide(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            NSApp.windows
-                .filter { !$0.isMiniaturized && !$0.title.isEmpty }
-                .forEach { window in
-                    window.centerIfNeeded()
-                    window.makeKeyAndOrderFront(nil)
-                }
+        explicitShowRequested = true
+        NSApp.setActivationPolicy(.accessory)
+        NSApp.unhide(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.windows
+            .filter { !$0.isMiniaturized && !$0.title.isEmpty }
+            .forEach { window in
+                window.centerIfNeeded()
+                window.makeKeyAndOrderFront(nil)
+            }
+    }
+
+    static func hideImplicitLaunchWindowIfNeeded() {
+        guard !explicitShowRequested else { return }
+        hideVisibleAppWindows()
+        NSApp.hide(nil)
+    }
+
+    static func hideImplicitWindowsForBackgroundAction() {
+        guard !explicitShowRequested else { return }
+        hideVisibleAppWindows()
+    }
+
+    private static func hideVisibleAppWindows() {
+        NSApp.windows
+            .filter { !$0.isMiniaturized && !$0.title.isEmpty && !ToastPresenter.isToastWindow($0) }
+            .forEach { $0.orderOut(nil) }
+    }
+}
+
+private enum FinderFocusRestorer {
+    static func restoreFinderAfterCopyToast() {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(100))
+            AppPresentation.hideImplicitWindowsForBackgroundAction()
+            NSRunningApplication
+                .runningApplications(withBundleIdentifier: "com.apple.finder")
+                .first?
+                .activate(options: [])
         }
+    }
+}
+
+@MainActor
+private enum ToastPresenter {
+    private static weak var panel: NSPanel?
+    private static var hideWorkItem: DispatchWorkItem?
+
+    static func show(_ message: String) {
+        hideWorkItem?.cancel()
+        panel?.close()
+
+        let size = NSSize(width: 260, height: 48)
+        let toastPanel = NSPanel(
+            contentRect: NSRect(origin: .zero, size: size),
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
+        toastPanel.identifier = NSUserInterfaceItemIdentifier("FinderXToastPanel")
+        toastPanel.isOpaque = false
+        toastPanel.backgroundColor = .clear
+        toastPanel.hasShadow = true
+        toastPanel.level = .floating
+        toastPanel.ignoresMouseEvents = true
+        toastPanel.canHide = false
+        toastPanel.collectionBehavior = [.canJoinAllSpaces, .transient, .ignoresCycle]
+        toastPanel.contentView = NSHostingView(rootView: ToastView(message: message))
+        toastPanel.alphaValue = 0
+        toastPanel.setFrameOrigin(origin(for: size))
+
+        panel = toastPanel
+        NSApp.setActivationPolicy(.accessory)
+        NSApp.unhide(nil)
+        toastPanel.orderFrontRegardless()
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.12
+            toastPanel.animator().alphaValue = 1
+        }
+
+        let workItem = DispatchWorkItem { [weak toastPanel] in
+            guard let toastPanel else { return }
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.18
+                toastPanel.animator().alphaValue = 0
+            } completionHandler: {
+                toastPanel.orderOut(nil)
+                toastPanel.close()
+            }
+        }
+        hideWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4, execute: workItem)
+    }
+
+    static func isToastWindow(_ window: NSWindow) -> Bool {
+        window.identifier?.rawValue == "FinderXToastPanel"
+    }
+
+    private static func origin(for size: NSSize) -> NSPoint {
+        let mouseLocation = NSEvent.mouseLocation
+        let screen = NSScreen.screens.first { $0.frame.contains(mouseLocation) } ?? NSScreen.main
+        let visibleFrame = screen?.visibleFrame ?? NSRect(x: 0, y: 0, width: 1280, height: 800)
+        return NSPoint(
+            x: visibleFrame.maxX - size.width - 24,
+            y: visibleFrame.maxY - size.height - 24
+        )
+    }
+}
+
+private struct ToastView: View {
+    let message: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+            Text(message)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 16)
+        .frame(width: 260, height: 48, alignment: .leading)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(Color.primary.opacity(0.12), lineWidth: 1)
+        )
     }
 }
 
@@ -230,23 +437,24 @@ final class CompressionRouter: ObservableObject {
 
     func open(_ url: URL) {
         guard url.scheme == "finderx" else { return }
-        if url.host == "open" {
+        switch url.host {
+        case "open":
             guard let fileURL = FinderXLink.resolveOpenURL(url) else {
                 logger.notice("open link ignored: could not resolve \(url.absoluteString, privacy: .public)")
                 return
             }
             NSWorkspace.shared.open(fileURL)
-            return
+        case "compress":
+            let files = fileURLs(from: url)
+            select(files)
+            AppPresentation.show()
+        case "copy-link":
+            copyFinderXLink(from: url)
+        case "copy-path":
+            copyAbsolutePath(from: url)
+        default:
+            logger.notice("URL ignored: unsupported host \(url.host ?? "nil", privacy: .public)")
         }
-
-        guard url.host == "compress" else { return }
-        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        let files = components?.queryItems?
-            .filter { $0.name == "file" }
-            .compactMap(\.value)
-            .compactMap { URL(fileURLWithPath: $0) } ?? []
-        select(files)
-        AppPresentation.show()
     }
 
     func openCompression(_ urls: [URL]) {
@@ -275,6 +483,44 @@ final class CompressionRouter: ObservableObject {
         stopAccessingSelectedURLs()
         securityScopedURLs = urls.filter { $0.startAccessingSecurityScopedResource() }
         selectedURLs = urls
+    }
+
+    private func copyFinderXLink(from url: URL) {
+        let files = fileURLs(from: url)
+        guard files.count == 1, FinderXFilePredicates.isOrdinaryFile(files[0]) else {
+            logger.notice("copy link URL ignored: expected one ordinary file, got \(files.count, privacy: .public)")
+            return
+        }
+
+        guard FinderXClipboard.copyFinderXLink(for: files[0]) != nil else {
+            logger.error("copy link URL failed: could not build link for \(files[0].path, privacy: .public)")
+            return
+        }
+
+        ToastPresenter.show("Copied FinderX link")
+        FinderFocusRestorer.restoreFinderAfterCopyToast()
+        logger.notice("copy link URL copied for \(files[0].path, privacy: .public)")
+    }
+
+    private func copyAbsolutePath(from url: URL) {
+        let files = fileURLs(from: url)
+        guard let text = FinderXClipboard.copyAbsolutePaths(for: files) else {
+            logger.notice("copy path URL ignored: no file URLs")
+            return
+        }
+
+        ToastPresenter.show("Copied absolute path")
+        FinderFocusRestorer.restoreFinderAfterCopyToast()
+        logger.notice("copy path URL copied count=\(text.split(separator: "\n").count, privacy: .public)")
+    }
+
+    private func fileURLs(from url: URL) -> [URL] {
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        return components?.queryItems?
+            .filter { $0.name == "file" }
+            .compactMap(\.value)
+            .filter { $0.hasPrefix("/") }
+            .map { URL(fileURLWithPath: $0) } ?? []
     }
 
     private func stopAccessingSelectedURLs() {

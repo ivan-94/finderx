@@ -8,9 +8,13 @@ FinderX is a macOS file extension app. The first vertical slice adds image compr
 - `FinderXFinderExtension`: Finder Sync Extension that contributes `Compress with FinderX` and `Copy FinderX Link`.
 - `ImageCompressionCore`: shared image inspection, output naming, and compression engine.
 - `FinderXLinking`: shared FinderX deep-link creation and resolution.
+- `XMindPreviewCore`: shared `.xmind` thumbnail extraction for Quick Look extensions.
+- `FinderXXMindThumbnailExtension`: Quick Look Thumbnail Extension for Finder `.xmind` thumbnails.
+- `FinderXXMindPreviewExtension`: Quick Look Preview Extension for spacebar previews of `.xmind` thumbnails.
 - `FinderXCompressCLI`: command-line smoke-test entry point for the same compression core.
 - `ImageCompressionCoreTests`: core behavior tests.
 - `FinderXLinkingTests`: deep-link behavior tests.
+- `XMindPreviewCoreTests`: `.xmind` thumbnail extraction tests.
 
 ## Build
 
@@ -67,9 +71,15 @@ If `xcodebuild test` cannot contact `testmanagerd` from a sandboxed agent sessio
 
 Right-clicking one ordinary file in a monitored Finder folder shows `Copy FinderX Link`. The action silently copies a `finderx://open?...` URL to the clipboard as both text and URL pasteboard content.
 
-For iCloud Drive files, Finder may not invoke Finder Sync contextual menus. FinderX also registers Finder Services for `Compress with FinderX` and `Copy FinderX Link`; use Finder's `Services` menu when the top-level Finder Sync items are not available.
+Right-clicking one or more Finder items also shows `Copy Absolute Path`. The action silently copies POSIX absolute paths to the clipboard as plain text, one path per line.
+
+For iCloud Drive files, Finder may not invoke Finder Sync contextual menus. FinderX also registers Finder Services for `Compress with FinderX`, `Copy FinderX Link`, and `Copy Absolute Path`; use Finder's `Services` menu when the top-level Finder Sync items are not available.
 
 iCloud Drive files include a migratable `icloud` relative path plus an absolute `file` fallback. Opening a copied link resolves the iCloud path first, falls back to the absolute path when needed, and delegates the file to macOS default app handling without showing the FinderX compression window.
+
+## XMind Quick Look
+
+FinderX declares alternate viewer support for `.xmind` files and embeds Quick Look extensions that read the thumbnail image already stored inside the XMind ZIP container. Finder thumbnails and spacebar Quick View use that embedded PNG/JPEG image when present. FinderX does not parse or redraw the mind map, does not materialize iCloud placeholders, and falls back to system default behavior when the archive has no embedded thumbnail.
 
 ## Smoke Test Compression
 

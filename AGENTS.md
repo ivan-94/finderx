@@ -40,7 +40,7 @@ Use these sources to rebuild project context:
 
 ## Architecture
 
-- `FinderXApp`: macOS SwiftUI app. It is an accessory/agent-style utility, hidden from the Dock via `LSUIElement`. It uses a single `Window("FinderX", id: "main")`, opens from `finderx://compress`, and hides after focus loss with a delay so Finder menu selection is not interrupted.
+- `FinderXApp`: macOS SwiftUI app. It is an accessory/agent-style utility, hidden from the Dock at runtime with `NSApp.setActivationPolicy(.accessory)`. It intentionally does not use `LSUIElement`, because Finder Services can appear but fail to dispatch to an LSUIElement-only app. It uses a single `Window("FinderX", id: "main")`, opens from `finderx://compress`, and hides after focus loss with a delay so Finder menu selection is not interrupted.
 - `FinderXFinderExtension`: Finder Sync Extension. It is directory-scoped, builds the contextual menu, filters supported images, falls back from `selectedItemURLs()` to `targetedURL()`, and hands files to the app through the custom URL scheme.
 - `ImageCompressionCore`: pure/testable image layer. It owns image metadata inspection, supported format detection, output URL collision handling, compression options, automatic output choice, WebP command encoding, and batch aggregation.
 - `FinderXCompressCLI`: command-line smoke path through the same compression core.
